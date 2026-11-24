@@ -1,0 +1,9 @@
+{
+  "name": "plataforma-estudos",
+  "private": true,
+  "workspaces": [
+    "shared",
+    "api",
+    "frontend"
+  ]
+}

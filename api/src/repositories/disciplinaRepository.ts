@@ -1,5 +1,5 @@
 import { prisma } from "../config/prisma.js";
-import type { DisciplinaDTO } from "../types/dtos.js";
+import type { DisciplinaDTO } from "@plataforma-estudos/shared/disciplina";
 
 export async function getAll() {
   return await prisma.disciplina.findMany({ orderBy: { nome: "asc" } });

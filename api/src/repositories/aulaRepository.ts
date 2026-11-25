@@ -1,9 +1,8 @@
 import { prisma } from "../config/prisma.js";
-import type { AulaDTO } from "../types/dtos.js";
+import type { AulaDTO } from "@plataforma-estudos/shared/aula";
 
 export async function getAll() {
   return await prisma.aula.findMany({
-    omit: { pdfArquivo: true },
     include: { disciplina: true },
     orderBy: { id: "asc" },
   });
@@ -12,7 +11,6 @@ export async function getAll() {
 export async function getOne(id: number) {
   return await prisma.aula.findUnique({
     where: { id },
-    omit: { pdfArquivo: true },
     include: {
       disciplina: true,
       questoes: {
@@ -25,7 +23,7 @@ export async function getOne(id: number) {
   });
 }
 
-export async function getPdfById(id: number) {
+export async function getPdf(id: number) {
   return await prisma.aula.findUnique({
     where: { id },
     select: { pdfNome: true, pdfArquivo: true },
@@ -41,18 +39,61 @@ export async function getByTituloAndDisciplina(
   });
 }
 
-export async function create(data: AulaDTO) {
+type ArquivoPDF = {
+  nome: string;
+  arquivo: Buffer;
+} // transferir para outro lugar (no zod, talvez)
+
+function converterPdf(arquivo: Buffer): Uint8Array<ArrayBuffer> {
+  const bytes = new Uint8Array(new ArrayBuffer(arquivo.byteLength));
+  bytes.set(arquivo);
+  return bytes;
+}
+
+export async function create(data: AulaDTO, pdf?: ArquivoPDF) {
   return await prisma.aula.create({
-    data,
+    data: {
+      titulo: data.titulo,
+      disciplina: {
+        connect: { id: data.disciplinaId },
+      },
+      ...(data.videoUrl !== undefined && {
+        videoUrl: data.videoUrl,
+      }),
+      pdfNome: pdf?.nome ?? null,
+      pdfArquivo: pdf ? converterPdf(pdf.arquivo) : null,
+    },
     omit: { pdfArquivo: true },
+    include: { questoes: true },
   });
 }
 
-export async function update(id: number, data: Partial<AulaDTO>) {
+export async function update(
+  id: number,
+  data: Partial<AulaDTO>,
+  pdf?: ArquivoPDF,
+) {
   return await prisma.aula.update({
     where: { id },
-    data,
+    data: {
+      ...(data.titulo !== undefined && {
+        titulo: data.titulo,
+      }),
+      ...(data.disciplinaId !== undefined && {
+        disciplina: {
+          connect: { id: data.disciplinaId },
+        },
+      }),
+      ...(data.videoUrl !== undefined && {
+        videoUrl: data.videoUrl,
+      }),
+      ...(pdf && {
+        pdfNome: pdf.nome,
+        pdfArquivo: converterPdf(pdf.arquivo),
+      }),
+    },
     omit: { pdfArquivo: true },
+    include: { questoes: true },
   });
 }
 

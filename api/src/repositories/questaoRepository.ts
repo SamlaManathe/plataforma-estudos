@@ -1,5 +1,5 @@
 import { prisma } from "../config/prisma.js";
-import type { QuestaoDTO } from "../types/dtos.js";
+import type { QuestaoDTO } from "@plataforma-estudos/shared/questao";
 
 export async function getAll() {
   return await prisma.questao.findMany({

@@ -1,8 +1,8 @@
 import type { Request, Response } from "express";
-import type { AlunoDTO } from "../types/dtos.js";
+import type { AlunoDTO } from "@plataforma-estudos/shared/aluno";
 import * as service from "../services/alunoService.js";
 
-export async function getAll(res: Response) {
+export async function getAll(req: Request, res: Response) {
   const alunos = await service.getAll();
   return res.json(alunos);
 }

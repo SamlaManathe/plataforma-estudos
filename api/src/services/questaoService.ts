@@ -1,5 +1,5 @@
 import type { Questao } from "../generated/prisma/client.js";
-import type { QuestaoDTO } from "../types/dtos.js";
+import type { QuestaoDTO } from "@plataforma-estudos/shared/questao";
 import * as repository from "../repositories/questaoRepository.js";
 import * as aulaRepository from "../repositories/aulaRepository.js";
 

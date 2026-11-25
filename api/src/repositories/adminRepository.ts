@@ -1,5 +1,5 @@
 import { prisma } from "../config/prisma.js";
-import type { AdminDTO } from "../types/dtos.js";
+import type { AdminDTO, CadastroAdminDTO } from "@plataforma-estudos/shared/admin";
 
 export async function getAll() {
   return await prisma.admin.findMany();
@@ -17,11 +17,11 @@ export async function getByTelephone(telefone: string) {
   return await prisma.admin.findUnique({ where: { telefone } });
 }
 
-export async function create(data: AdminDTO) {
+export async function create(data: CadastroAdminDTO) {
   return await prisma.admin.create({ data });
 }
 
-export async function update(id: number, data: Partial<AdminDTO>) {
+export async function update(id: number, data: Partial<CadastroAdminDTO>) {
   return await prisma.admin.update({ where: { id }, data });
 }
 

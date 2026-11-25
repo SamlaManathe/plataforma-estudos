@@ -1,5 +1,5 @@
 import type { Disciplina } from "../generated/prisma/client.js";
-import type { DisciplinaDTO } from "../types/dtos.js";
+import type { DisciplinaDTO } from "@plataforma-estudos/shared/disciplina";
 import * as repository from "../repositories/disciplinaRepository.js";
 
 export async function getAll(): Promise<Disciplina[]> {

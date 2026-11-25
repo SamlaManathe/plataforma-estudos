@@ -6,3 +6,83 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Aluno {
+  id           Int      @id @default(autoincrement())
+  nome         String
+  telefone     String   @unique
+  email        String   @unique
+  senha        String
+  criadoEm     DateTime @default(now()) @map("criado_em")
+  atualizadoEm DateTime @updatedAt @map("atualizado_em")
+
+  @@map("alunos")
+}
+
+// Professor
+model Admin {
+  id           Int      @id @default(autoincrement())
+  nome         String
+  telefone     String   @unique
+  email        String   @unique
+  senha        String
+  criadoEm     DateTime @default(now()) @map("criado_em")
+  atualizadoEm DateTime @updatedAt @map("atualizado_em")
+
+  @@map("admins")
+}
+
+model Disciplina {
+  id    Int    @id @default(autoincrement())
+  nome  String @unique
+  aulas Aula[]
+
+  @@map("disciplinas")
+}
+
+model Aula {
+  id           Int        @id @default(autoincrement())
+  titulo       String
+  videoUrl     String?    @map("video_url")
+  pdfNome      String?    @map("pdf_nome")
+  pdfArquivo   Bytes?     @map("pdf_arquivo")
+  disciplinaId Int        @map("disciplina_id")
+  questoes     Questao[]
+  criadoEm     DateTime   @default(now()) @map("criado_em")
+  atualizadoEm DateTime   @updatedAt @map("atualizado_em")
+  disciplina   Disciplina @relation(fields: [disciplinaId], references: [id], onDelete: Cascade)
+
+  @@map("aulas")
+}
+
+model Questao {
+  id            Int           @id @default(autoincrement())
+  numeroQuestao Int           @map("numero_questao")
+  textoQuestao  String        @db.Text
+  aulaId        Int           @map("aula_id")
+  aula          Aula          @relation(fields: [aulaId], references: [id], onDelete: Cascade)
+  alternativas  Alternativa[]
+
+  @@unique([aulaId, numeroQuestao])
+  @@map("questoes")
+}
+
+enum LetraAlternativa {
+  A
+  B
+  C
+  D
+  E
+}
+
+model Alternativa {
+  id        Int              @id @default(autoincrement())
+  letra     LetraAlternativa // "A", "B", "C", "D" ou "E"
+  texto     String           @db.Text
+  correta   Boolean          @default(false)
+  questaoId Int              @map("questao_id")
+  questao   Questao          @relation(fields: [questaoId], references: [id], onDelete: Cascade)
+
+  @@unique([questaoId, letra])
+  @@map("alternativas")
+}

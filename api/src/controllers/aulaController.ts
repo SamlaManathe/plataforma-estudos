@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
-import type { AulaDTO } from "../types/dtos.js";
+import type { AulaDTO } from "@plataforma-estudos/shared/aula";
 import * as service from "../services/aulaService.js";
+import multer from "multer";
 
 export async function getAll(req: Request, res: Response) {
   const aulas = await service.getAll();
@@ -35,14 +36,30 @@ export async function getPdf(req: Request, res: Response) {
 
 export async function create(req: Request, res: Response) {
   const dados: AulaDTO = req.body;
-  const aula = await service.create(dados);
+
+  const pdf = req.file
+  ? {
+      nome: req.file.originalname,
+      arquivo: req.file.buffer,
+    }
+  : undefined;
+
+  const aula = await service.create(dados, pdf);
   return res.status(201).json(aula);
 }
 
 export async function update(req: Request, res: Response) {
   const id = Number(req.params.id);
   const dados: AulaDTO = req.body;
-  const aula = await service.update(id, dados);
+
+  const pdf = req.file
+  ? {
+      nome: req.file.originalname,
+      arquivo: req.file.buffer,
+    }
+  : undefined;
+
+  const aula = await service.update(id, dados, pdf);
   return res.json(aula);
 }
 

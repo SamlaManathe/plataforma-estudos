@@ -12,6 +12,7 @@ import disciplinaRoutes from "./routes/disciplinaRoutes.js";
 import aulaRoutes from "./routes/aulaRoutes.js";
 import questaoRoutes from "./routes/questaoRoutes.js";
 import alternativaRoutes from "./routes/alternativaRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use(disciplinaRoutes);
 app.use(aulaRoutes);
 app.use(questaoRoutes);
 app.use(alternativaRoutes);
+app.use(authRoutes);
 
 // Captura os throw new Error() dos services e devolve HTTP 400
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

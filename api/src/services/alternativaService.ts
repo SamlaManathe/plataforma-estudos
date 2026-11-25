@@ -2,7 +2,7 @@ import type {
   Alternativa,
   LetraAlternativa,
 } from "../generated/prisma/client.js";
-import type { AlternativaDTO } from "../types/dtos.js";
+import type { AlternativaDTO } from "@plataforma-estudos/shared/alternativa";
 import * as repository from "../repositories/alternativaRepository.js";
 import * as questaoRepository from "../repositories/questaoRepository.js";
 

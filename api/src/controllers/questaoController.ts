@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import type { QuestaoDTO } from "@plataforma-estudos/shared/questao";
 import * as service from "../services/questaoService.js";
 
 export async function getAll(req: Request, res: Response) {

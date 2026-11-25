@@ -1,5 +1,5 @@
 import { prisma } from "../config/prisma.js";
-import type { AlternativaDTO } from "../types/dtos.js";
+import type { AlternativaDTO } from "@plataforma-estudos/shared/alternativa";
 
 export async function getAll() {
   return await prisma.alternativa.findMany({

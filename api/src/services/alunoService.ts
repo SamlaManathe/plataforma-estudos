@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import type { Aluno as AlunoPrisma } from "../generated/prisma/client.js";
-import type { AlunoDTO } from "../types/dtos.js";
+import type { AlunoDTO, CadastroAlunoDTO } from "@plataforma-estudos/shared/aluno";
 import * as repository from "../repositories/alunoRepository.js";
 
 type Aluno = Omit<AlunoPrisma, "senha">;
@@ -14,7 +14,7 @@ export async function getOne(id: number): Promise<Aluno | null> {
   return await repository.getOne(id);
 }
 
-export async function create(dados: AlunoDTO): Promise<Aluno> {
+export async function create(dados: CadastroAlunoDTO): Promise<Aluno> {
   // Verificações de erro
   const emailExistente = await repository.getByEmail(dados.email);
   if (emailExistente) {
@@ -30,7 +30,7 @@ export async function create(dados: AlunoDTO): Promise<Aluno> {
   return await repository.create({ ...dados, senha: senhaHash });
 }
 
-export async function update(id: number, dados: AlunoDTO): Promise<Aluno> {
+export async function update(id: number, dados: CadastroAlunoDTO): Promise<Aluno> {
   // Verificações de erro
   const alunoExistente = await repository.getOne(id);
   if (!alunoExistente) {
@@ -47,7 +47,7 @@ export async function update(id: number, dados: AlunoDTO): Promise<Aluno> {
     throw new Error("Já existe um aluno cadastrado com este telefone.");
   }
 
-  const dadosAtualizados: Partial<AlunoDTO> = { ...dados };
+  const dadosAtualizados: Partial<CadastroAlunoDTO> = { ...dados };
   if (dados.senha) {
     dadosAtualizados.senha = await bcrypt.hash(dados.senha, SALT_ROUNDS);
   }

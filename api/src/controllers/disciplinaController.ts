@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import type { DisciplinaDTO } from "@plataforma-estudos/shared/disciplina";
 import * as service from "../services/disciplinaService.js";
 
 export async function getAll(req: Request, res: Response) {

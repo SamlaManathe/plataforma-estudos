@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import * as service from "../services/authService.js";
-import type { LoginDTO } from "@plataforma-estudos/shared/auth";
+import * as service from "../services/loginService.js";
+import type { LoginDTO } from "@plataforma-estudos/shared/login";
 
 export async function login(req: Request, res: Response) {
   const dados: LoginDTO = req.body;

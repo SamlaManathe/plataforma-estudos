@@ -5,12 +5,20 @@ import {
 } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 import { adminSchema, cadastroAdminSchema } from "@plataforma-estudos/shared/admin";
-import { alunoSchema, cadastroAlunoSchema } from "@plataforma-estudos/shared/aluno";
-import { loginSchema } from "@plataforma-estudos/shared/auth";
+import {
+  alunoSchema,
+  cadastroAlunoSchema,
+  atualizarAlunoSchema,
+} from "@plataforma-estudos/shared/aluno";
+import { loginSchema } from "@plataforma-estudos/shared/login";
 import { disciplinaSchema } from "@plataforma-estudos/shared/disciplina";
 import { aulaSchema } from "@plataforma-estudos/shared/aula";
 import { questaoSchema } from "@plataforma-estudos/shared/questao";
 import { alternativaSchema } from "@plataforma-estudos/shared/alternativa";
+import {
+  enviarRespostasAulaSchema,
+  marcarAulaAssistidaSchema,
+} from "@plataforma-estudos/shared/progresso";
 
 extendZodWithOpenApi(z);
 
@@ -19,6 +27,10 @@ const registry = new OpenAPIRegistry();
 // Schemas de resposta e erro padrão
 const idParamSchema = z.object({
   id: z.string().openapi({ example: "1", description: "ID numérico do registro" }),
+});
+
+const alunoIdParamSchema = z.object({
+  alunoId: z.string().openapi({ example: "1", description: "ID numérico do aluno" }),
 });
 
 const erroValidacaoSchema = z.object({
@@ -139,7 +151,7 @@ function registrarCrud(
 // 1. Autenticação
 registry.registerPath({
   method: "post",
-  path: "/auth/login",
+  path: "/login",
   tags: ["Autenticação"],
   summary: "Login de usuário (Admin ou Aluno)",
   request: {
@@ -169,7 +181,7 @@ registrarCrud(
   "Alunos",
   "/alunos",
   cadastroAlunoSchema,
-  cadastroAlunoSchema,
+  atualizarAlunoSchema,
   alunoSchema.extend({ id: z.number() })
 );
 registrarCrud(
@@ -214,6 +226,57 @@ registry.registerPath({
   },
 });
 
+// 3. Rotas de Progresso do Aluno e Relatório do Admin
+registry.registerPath({
+  method: "post",
+  path: "/progresso/responder-aula",
+  tags: ["Progresso"],
+  summary: "Enviar respostas das questões de uma aula (trava definitiva)",
+  request: {
+    body: { content: { "application/json": { schema: enviarRespostasAulaSchema } } },
+  },
+  responses: {
+    201: { description: "Respostas salvas com sucesso" },
+    400: { description: "Erro de validação ou questionário já respondido" },
+  },
+});
+
+registry.registerPath({
+  method: "post",
+  path: "/progresso/assistir-aula",
+  tags: ["Progresso"],
+  summary: "Marcar aula como assistida pelo aluno",
+  request: {
+    body: { content: { "application/json": { schema: marcarAulaAssistidaSchema } } },
+  },
+  responses: {
+    201: { description: "Aula marcada como assistida" },
+    400: { description: "Erro de validação ou questionário pendente" },
+  },
+});
+
+registry.registerPath({
+  method: "get",
+  path: "/progresso/aluno/{alunoId}",
+  tags: ["Progresso"],
+  summary: "Obter resumo geral e porcentagens de acertos/aulas do aluno",
+  request: { params: alunoIdParamSchema },
+  responses: {
+    200: { description: "Dashboard de progresso do aluno" },
+    404: { description: "Aluno não encontrado", content: { "application/json": { schema: erroSimplesSchema } } },
+  },
+});
+
+registry.registerPath({
+  method: "get",
+  path: "/progresso/admin/relatorio",
+  tags: ["Progresso"],
+  summary: "Relatório de acertos e erros por aluno para o professor (Admin)",
+  responses: {
+    200: { description: "Relatório detalhado dos alunos" },
+  },
+});
+
 const generator = new OpenApiGeneratorV3(registry.definitions);
 
 export const swaggerDocument = generator.generateDocument({
@@ -221,6 +284,7 @@ export const swaggerDocument = generator.generateDocument({
   info: {
     title: "API Plataforma de Estudos",
     version: "1.0.0",
-    description: "Documentação da API de Disciplinas, Aulas, Questões, Alternativas, Alunos e Admins",
+    description:
+      "Documentação da API de Disciplinas, Aulas, Questões, Alternativas, Alunos, Admins e Progresso",
   },
 });

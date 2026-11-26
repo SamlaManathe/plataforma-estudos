@@ -15,6 +15,7 @@ export const alunoSchema = z.object({
 
   email: z
     .string({ error: "O email é obrigatório" })
+    .email("Digite um e-mail válido")
     .meta({ example: "aluno@example.com" }),
 });
 
@@ -26,8 +27,19 @@ export const cadastroAlunoSchema = alunoSchema.extend({
     .meta({ example: "senhaForte123#" }),
 });
 
+export const atualizarAlunoSchema = alunoSchema.extend({
+  senha: z
+    .string({ error: "A senha deve ser um texto" })
+    .min(8, "A senha deve ter pelo menos 8 caracteres")
+    .max(72, "A senha deve ter no máximo 72 caracteres")
+    .optional()
+    .or(z.literal(""))
+    .meta({ example: "novaSenha123#" }),
+});
+
 export type AlunoDTO = z.infer<typeof alunoSchema>;
 export type CadastroAlunoDTO = z.infer<typeof cadastroAlunoSchema>;
+export type AtualizarAlunoDTO = z.infer<typeof atualizarAlunoSchema>;
 
 // Formato que a API devolve (sem senha)
 export type Aluno = AlunoDTO & { id: number };

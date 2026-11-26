@@ -17,7 +17,7 @@ export type UsuarioLogado = (Aluno | Admin) & {
 };
 
 export async function login(dados: LoginDTO): Promise<UsuarioLogado> {
-  const resposta = await api.post<UsuarioLogado>("/auth/login", dados);
+  const resposta = await api.post<UsuarioLogado>("/login", dados);
   return resposta.data;
 }
 

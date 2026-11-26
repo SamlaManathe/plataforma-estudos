@@ -47,3 +47,13 @@ export type Questao = Prisma.QuestaoModel
  * 
  */
 export type Alternativa = Prisma.AlternativaModel
+/**
+ * Model RespostaAluno
+ * 
+ */
+export type RespostaAluno = Prisma.RespostaAlunoModel
+/**
+ * Model ProgressoAula
+ * 
+ */
+export type ProgressoAula = Prisma.ProgressoAulaModel

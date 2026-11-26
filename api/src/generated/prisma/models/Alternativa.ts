@@ -221,6 +221,7 @@ export type AlternativaWhereInput = {
   correta?: Prisma.BoolFilter<"Alternativa"> | boolean
   questaoId?: Prisma.IntFilter<"Alternativa"> | number
   questao?: Prisma.XOR<Prisma.QuestaoScalarRelationFilter, Prisma.QuestaoWhereInput>
+  respostas?: Prisma.RespostaAlunoListRelationFilter
 }
 
 export type AlternativaOrderByWithRelationInput = {
@@ -230,6 +231,7 @@ export type AlternativaOrderByWithRelationInput = {
   correta?: Prisma.SortOrder
   questaoId?: Prisma.SortOrder
   questao?: Prisma.QuestaoOrderByWithRelationInput
+  respostas?: Prisma.RespostaAlunoOrderByRelationAggregateInput
 }
 
 export type AlternativaWhereUniqueInput = Prisma.AtLeast<{
@@ -243,6 +245,7 @@ export type AlternativaWhereUniqueInput = Prisma.AtLeast<{
   correta?: Prisma.BoolFilter<"Alternativa"> | boolean
   questaoId?: Prisma.IntFilter<"Alternativa"> | number
   questao?: Prisma.XOR<Prisma.QuestaoScalarRelationFilter, Prisma.QuestaoWhereInput>
+  respostas?: Prisma.RespostaAlunoListRelationFilter
 }, "id" | "questaoId_letra">
 
 export type AlternativaOrderByWithAggregationInput = {
@@ -274,6 +277,7 @@ export type AlternativaCreateInput = {
   texto: string
   correta?: boolean
   questao: Prisma.QuestaoCreateNestedOneWithoutAlternativasInput
+  respostas?: Prisma.RespostaAlunoCreateNestedManyWithoutAlternativaInput
 }
 
 export type AlternativaUncheckedCreateInput = {
@@ -282,6 +286,7 @@ export type AlternativaUncheckedCreateInput = {
   texto: string
   correta?: boolean
   questaoId: number
+  respostas?: Prisma.RespostaAlunoUncheckedCreateNestedManyWithoutAlternativaInput
 }
 
 export type AlternativaUpdateInput = {
@@ -289,6 +294,7 @@ export type AlternativaUpdateInput = {
   texto?: Prisma.StringFieldUpdateOperationsInput | string
   correta?: Prisma.BoolFieldUpdateOperationsInput | boolean
   questao?: Prisma.QuestaoUpdateOneRequiredWithoutAlternativasNestedInput
+  respostas?: Prisma.RespostaAlunoUpdateManyWithoutAlternativaNestedInput
 }
 
 export type AlternativaUncheckedUpdateInput = {
@@ -297,6 +303,7 @@ export type AlternativaUncheckedUpdateInput = {
   texto?: Prisma.StringFieldUpdateOperationsInput | string
   correta?: Prisma.BoolFieldUpdateOperationsInput | boolean
   questaoId?: Prisma.IntFieldUpdateOperationsInput | number
+  respostas?: Prisma.RespostaAlunoUncheckedUpdateManyWithoutAlternativaNestedInput
 }
 
 export type AlternativaCreateManyInput = {
@@ -370,6 +377,11 @@ export type AlternativaSumOrderByAggregateInput = {
   questaoId?: Prisma.SortOrder
 }
 
+export type AlternativaScalarRelationFilter = {
+  is?: Prisma.AlternativaWhereInput
+  isNot?: Prisma.AlternativaWhereInput
+}
+
 export type AlternativaCreateNestedManyWithoutQuestaoInput = {
   create?: Prisma.XOR<Prisma.AlternativaCreateWithoutQuestaoInput, Prisma.AlternativaUncheckedCreateWithoutQuestaoInput> | Prisma.AlternativaCreateWithoutQuestaoInput[] | Prisma.AlternativaUncheckedCreateWithoutQuestaoInput[]
   connectOrCreate?: Prisma.AlternativaCreateOrConnectWithoutQuestaoInput | Prisma.AlternativaCreateOrConnectWithoutQuestaoInput[]
@@ -420,10 +432,25 @@ export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
+export type AlternativaCreateNestedOneWithoutRespostasInput = {
+  create?: Prisma.XOR<Prisma.AlternativaCreateWithoutRespostasInput, Prisma.AlternativaUncheckedCreateWithoutRespostasInput>
+  connectOrCreate?: Prisma.AlternativaCreateOrConnectWithoutRespostasInput
+  connect?: Prisma.AlternativaWhereUniqueInput
+}
+
+export type AlternativaUpdateOneRequiredWithoutRespostasNestedInput = {
+  create?: Prisma.XOR<Prisma.AlternativaCreateWithoutRespostasInput, Prisma.AlternativaUncheckedCreateWithoutRespostasInput>
+  connectOrCreate?: Prisma.AlternativaCreateOrConnectWithoutRespostasInput
+  upsert?: Prisma.AlternativaUpsertWithoutRespostasInput
+  connect?: Prisma.AlternativaWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AlternativaUpdateToOneWithWhereWithoutRespostasInput, Prisma.AlternativaUpdateWithoutRespostasInput>, Prisma.AlternativaUncheckedUpdateWithoutRespostasInput>
+}
+
 export type AlternativaCreateWithoutQuestaoInput = {
   letra: $Enums.LetraAlternativa
   texto: string
   correta?: boolean
+  respostas?: Prisma.RespostaAlunoCreateNestedManyWithoutAlternativaInput
 }
 
 export type AlternativaUncheckedCreateWithoutQuestaoInput = {
@@ -431,6 +458,7 @@ export type AlternativaUncheckedCreateWithoutQuestaoInput = {
   letra: $Enums.LetraAlternativa
   texto: string
   correta?: boolean
+  respostas?: Prisma.RespostaAlunoUncheckedCreateNestedManyWithoutAlternativaInput
 }
 
 export type AlternativaCreateOrConnectWithoutQuestaoInput = {
@@ -470,6 +498,52 @@ export type AlternativaScalarWhereInput = {
   questaoId?: Prisma.IntFilter<"Alternativa"> | number
 }
 
+export type AlternativaCreateWithoutRespostasInput = {
+  letra: $Enums.LetraAlternativa
+  texto: string
+  correta?: boolean
+  questao: Prisma.QuestaoCreateNestedOneWithoutAlternativasInput
+}
+
+export type AlternativaUncheckedCreateWithoutRespostasInput = {
+  id?: number
+  letra: $Enums.LetraAlternativa
+  texto: string
+  correta?: boolean
+  questaoId: number
+}
+
+export type AlternativaCreateOrConnectWithoutRespostasInput = {
+  where: Prisma.AlternativaWhereUniqueInput
+  create: Prisma.XOR<Prisma.AlternativaCreateWithoutRespostasInput, Prisma.AlternativaUncheckedCreateWithoutRespostasInput>
+}
+
+export type AlternativaUpsertWithoutRespostasInput = {
+  update: Prisma.XOR<Prisma.AlternativaUpdateWithoutRespostasInput, Prisma.AlternativaUncheckedUpdateWithoutRespostasInput>
+  create: Prisma.XOR<Prisma.AlternativaCreateWithoutRespostasInput, Prisma.AlternativaUncheckedCreateWithoutRespostasInput>
+  where?: Prisma.AlternativaWhereInput
+}
+
+export type AlternativaUpdateToOneWithWhereWithoutRespostasInput = {
+  where?: Prisma.AlternativaWhereInput
+  data: Prisma.XOR<Prisma.AlternativaUpdateWithoutRespostasInput, Prisma.AlternativaUncheckedUpdateWithoutRespostasInput>
+}
+
+export type AlternativaUpdateWithoutRespostasInput = {
+  letra?: Prisma.EnumLetraAlternativaFieldUpdateOperationsInput | $Enums.LetraAlternativa
+  texto?: Prisma.StringFieldUpdateOperationsInput | string
+  correta?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  questao?: Prisma.QuestaoUpdateOneRequiredWithoutAlternativasNestedInput
+}
+
+export type AlternativaUncheckedUpdateWithoutRespostasInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  letra?: Prisma.EnumLetraAlternativaFieldUpdateOperationsInput | $Enums.LetraAlternativa
+  texto?: Prisma.StringFieldUpdateOperationsInput | string
+  correta?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  questaoId?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
 export type AlternativaCreateManyQuestaoInput = {
   id?: number
   letra: $Enums.LetraAlternativa
@@ -481,6 +555,7 @@ export type AlternativaUpdateWithoutQuestaoInput = {
   letra?: Prisma.EnumLetraAlternativaFieldUpdateOperationsInput | $Enums.LetraAlternativa
   texto?: Prisma.StringFieldUpdateOperationsInput | string
   correta?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  respostas?: Prisma.RespostaAlunoUpdateManyWithoutAlternativaNestedInput
 }
 
 export type AlternativaUncheckedUpdateWithoutQuestaoInput = {
@@ -488,6 +563,7 @@ export type AlternativaUncheckedUpdateWithoutQuestaoInput = {
   letra?: Prisma.EnumLetraAlternativaFieldUpdateOperationsInput | $Enums.LetraAlternativa
   texto?: Prisma.StringFieldUpdateOperationsInput | string
   correta?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  respostas?: Prisma.RespostaAlunoUncheckedUpdateManyWithoutAlternativaNestedInput
 }
 
 export type AlternativaUncheckedUpdateManyWithoutQuestaoInput = {
@@ -498,6 +574,35 @@ export type AlternativaUncheckedUpdateManyWithoutQuestaoInput = {
 }
 
 
+/**
+ * Count Type AlternativaCountOutputType
+ */
+
+export type AlternativaCountOutputType = {
+  respostas: number
+}
+
+export type AlternativaCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  respostas?: boolean | AlternativaCountOutputTypeCountRespostasArgs
+}
+
+/**
+ * AlternativaCountOutputType without action
+ */
+export type AlternativaCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AlternativaCountOutputType
+   */
+  select?: Prisma.AlternativaCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * AlternativaCountOutputType without action
+ */
+export type AlternativaCountOutputTypeCountRespostasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RespostaAlunoWhereInput
+}
+
 
 export type AlternativaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -506,6 +611,8 @@ export type AlternativaSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   correta?: boolean
   questaoId?: boolean
   questao?: boolean | Prisma.QuestaoDefaultArgs<ExtArgs>
+  respostas?: boolean | Prisma.Alternativa$respostasArgs<ExtArgs>
+  _count?: boolean | Prisma.AlternativaCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["alternativa"]>
 
 export type AlternativaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -537,6 +644,8 @@ export type AlternativaSelectScalar = {
 export type AlternativaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "letra" | "texto" | "correta" | "questaoId", ExtArgs["result"]["alternativa"]>
 export type AlternativaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   questao?: boolean | Prisma.QuestaoDefaultArgs<ExtArgs>
+  respostas?: boolean | Prisma.Alternativa$respostasArgs<ExtArgs>
+  _count?: boolean | Prisma.AlternativaCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AlternativaIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   questao?: boolean | Prisma.QuestaoDefaultArgs<ExtArgs>
@@ -549,6 +658,7 @@ export type $AlternativaPayload<ExtArgs extends runtime.Types.Extensions.Interna
   name: "Alternativa"
   objects: {
     questao: Prisma.$QuestaoPayload<ExtArgs>
+    respostas: Prisma.$RespostaAlunoPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -951,6 +1061,7 @@ readonly fields: AlternativaFieldRefs;
 export interface Prisma__AlternativaClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   questao<T extends Prisma.QuestaoDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.QuestaoDefaultArgs<ExtArgs>>): Prisma.Prisma__QuestaoClient<runtime.Types.Result.GetResult<Prisma.$QuestaoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  respostas<T extends Prisma.Alternativa$respostasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Alternativa$respostasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RespostaAlunoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1383,6 +1494,30 @@ export type AlternativaDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Limit how many Alternativas to delete.
    */
   limit?: number
+}
+
+/**
+ * Alternativa.respostas
+ */
+export type Alternativa$respostasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RespostaAluno
+   */
+  select?: Prisma.RespostaAlunoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RespostaAluno
+   */
+  omit?: Prisma.RespostaAlunoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RespostaAlunoInclude<ExtArgs> | null
+  where?: Prisma.RespostaAlunoWhereInput
+  orderBy?: Prisma.RespostaAlunoOrderByWithRelationInput | Prisma.RespostaAlunoOrderByWithRelationInput[]
+  cursor?: Prisma.RespostaAlunoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RespostaAlunoScalarFieldEnum | Prisma.RespostaAlunoScalarFieldEnum[]
 }
 
 /**

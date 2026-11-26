@@ -245,6 +245,7 @@ export type AulaWhereInput = {
   criadoEm?: Prisma.DateTimeFilter<"Aula"> | Date | string
   atualizadoEm?: Prisma.DateTimeFilter<"Aula"> | Date | string
   questoes?: Prisma.QuestaoListRelationFilter
+  progressos?: Prisma.ProgressoAulaListRelationFilter
   disciplina?: Prisma.XOR<Prisma.DisciplinaScalarRelationFilter, Prisma.DisciplinaWhereInput>
 }
 
@@ -258,6 +259,7 @@ export type AulaOrderByWithRelationInput = {
   criadoEm?: Prisma.SortOrder
   atualizadoEm?: Prisma.SortOrder
   questoes?: Prisma.QuestaoOrderByRelationAggregateInput
+  progressos?: Prisma.ProgressoAulaOrderByRelationAggregateInput
   disciplina?: Prisma.DisciplinaOrderByWithRelationInput
 }
 
@@ -274,6 +276,7 @@ export type AulaWhereUniqueInput = Prisma.AtLeast<{
   criadoEm?: Prisma.DateTimeFilter<"Aula"> | Date | string
   atualizadoEm?: Prisma.DateTimeFilter<"Aula"> | Date | string
   questoes?: Prisma.QuestaoListRelationFilter
+  progressos?: Prisma.ProgressoAulaListRelationFilter
   disciplina?: Prisma.XOR<Prisma.DisciplinaScalarRelationFilter, Prisma.DisciplinaWhereInput>
 }, "id">
 
@@ -315,6 +318,7 @@ export type AulaCreateInput = {
   criadoEm?: Date | string
   atualizadoEm?: Date | string
   questoes?: Prisma.QuestaoCreateNestedManyWithoutAulaInput
+  progressos?: Prisma.ProgressoAulaCreateNestedManyWithoutAulaInput
   disciplina: Prisma.DisciplinaCreateNestedOneWithoutAulasInput
 }
 
@@ -328,6 +332,7 @@ export type AulaUncheckedCreateInput = {
   criadoEm?: Date | string
   atualizadoEm?: Date | string
   questoes?: Prisma.QuestaoUncheckedCreateNestedManyWithoutAulaInput
+  progressos?: Prisma.ProgressoAulaUncheckedCreateNestedManyWithoutAulaInput
 }
 
 export type AulaUpdateInput = {
@@ -338,6 +343,7 @@ export type AulaUpdateInput = {
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   atualizadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   questoes?: Prisma.QuestaoUpdateManyWithoutAulaNestedInput
+  progressos?: Prisma.ProgressoAulaUpdateManyWithoutAulaNestedInput
   disciplina?: Prisma.DisciplinaUpdateOneRequiredWithoutAulasNestedInput
 }
 
@@ -351,6 +357,7 @@ export type AulaUncheckedUpdateInput = {
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   atualizadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   questoes?: Prisma.QuestaoUncheckedUpdateManyWithoutAulaNestedInput
+  progressos?: Prisma.ProgressoAulaUncheckedUpdateManyWithoutAulaNestedInput
 }
 
 export type AulaCreateManyInput = {
@@ -506,6 +513,20 @@ export type AulaUpdateOneRequiredWithoutQuestoesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AulaUpdateToOneWithWhereWithoutQuestoesInput, Prisma.AulaUpdateWithoutQuestoesInput>, Prisma.AulaUncheckedUpdateWithoutQuestoesInput>
 }
 
+export type AulaCreateNestedOneWithoutProgressosInput = {
+  create?: Prisma.XOR<Prisma.AulaCreateWithoutProgressosInput, Prisma.AulaUncheckedCreateWithoutProgressosInput>
+  connectOrCreate?: Prisma.AulaCreateOrConnectWithoutProgressosInput
+  connect?: Prisma.AulaWhereUniqueInput
+}
+
+export type AulaUpdateOneRequiredWithoutProgressosNestedInput = {
+  create?: Prisma.XOR<Prisma.AulaCreateWithoutProgressosInput, Prisma.AulaUncheckedCreateWithoutProgressosInput>
+  connectOrCreate?: Prisma.AulaCreateOrConnectWithoutProgressosInput
+  upsert?: Prisma.AulaUpsertWithoutProgressosInput
+  connect?: Prisma.AulaWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AulaUpdateToOneWithWhereWithoutProgressosInput, Prisma.AulaUpdateWithoutProgressosInput>, Prisma.AulaUncheckedUpdateWithoutProgressosInput>
+}
+
 export type AulaCreateWithoutDisciplinaInput = {
   titulo: string
   videoUrl?: string | null
@@ -514,6 +535,7 @@ export type AulaCreateWithoutDisciplinaInput = {
   criadoEm?: Date | string
   atualizadoEm?: Date | string
   questoes?: Prisma.QuestaoCreateNestedManyWithoutAulaInput
+  progressos?: Prisma.ProgressoAulaCreateNestedManyWithoutAulaInput
 }
 
 export type AulaUncheckedCreateWithoutDisciplinaInput = {
@@ -525,6 +547,7 @@ export type AulaUncheckedCreateWithoutDisciplinaInput = {
   criadoEm?: Date | string
   atualizadoEm?: Date | string
   questoes?: Prisma.QuestaoUncheckedCreateNestedManyWithoutAulaInput
+  progressos?: Prisma.ProgressoAulaUncheckedCreateNestedManyWithoutAulaInput
 }
 
 export type AulaCreateOrConnectWithoutDisciplinaInput = {
@@ -574,6 +597,7 @@ export type AulaCreateWithoutQuestoesInput = {
   pdfArquivo?: runtime.Bytes | null
   criadoEm?: Date | string
   atualizadoEm?: Date | string
+  progressos?: Prisma.ProgressoAulaCreateNestedManyWithoutAulaInput
   disciplina: Prisma.DisciplinaCreateNestedOneWithoutAulasInput
 }
 
@@ -586,6 +610,7 @@ export type AulaUncheckedCreateWithoutQuestoesInput = {
   disciplinaId: number
   criadoEm?: Date | string
   atualizadoEm?: Date | string
+  progressos?: Prisma.ProgressoAulaUncheckedCreateNestedManyWithoutAulaInput
 }
 
 export type AulaCreateOrConnectWithoutQuestoesInput = {
@@ -611,6 +636,7 @@ export type AulaUpdateWithoutQuestoesInput = {
   pdfArquivo?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   atualizadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  progressos?: Prisma.ProgressoAulaUpdateManyWithoutAulaNestedInput
   disciplina?: Prisma.DisciplinaUpdateOneRequiredWithoutAulasNestedInput
 }
 
@@ -623,6 +649,69 @@ export type AulaUncheckedUpdateWithoutQuestoesInput = {
   disciplinaId?: Prisma.IntFieldUpdateOperationsInput | number
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   atualizadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  progressos?: Prisma.ProgressoAulaUncheckedUpdateManyWithoutAulaNestedInput
+}
+
+export type AulaCreateWithoutProgressosInput = {
+  titulo: string
+  videoUrl?: string | null
+  pdfNome?: string | null
+  pdfArquivo?: runtime.Bytes | null
+  criadoEm?: Date | string
+  atualizadoEm?: Date | string
+  questoes?: Prisma.QuestaoCreateNestedManyWithoutAulaInput
+  disciplina: Prisma.DisciplinaCreateNestedOneWithoutAulasInput
+}
+
+export type AulaUncheckedCreateWithoutProgressosInput = {
+  id?: number
+  titulo: string
+  videoUrl?: string | null
+  pdfNome?: string | null
+  pdfArquivo?: runtime.Bytes | null
+  disciplinaId: number
+  criadoEm?: Date | string
+  atualizadoEm?: Date | string
+  questoes?: Prisma.QuestaoUncheckedCreateNestedManyWithoutAulaInput
+}
+
+export type AulaCreateOrConnectWithoutProgressosInput = {
+  where: Prisma.AulaWhereUniqueInput
+  create: Prisma.XOR<Prisma.AulaCreateWithoutProgressosInput, Prisma.AulaUncheckedCreateWithoutProgressosInput>
+}
+
+export type AulaUpsertWithoutProgressosInput = {
+  update: Prisma.XOR<Prisma.AulaUpdateWithoutProgressosInput, Prisma.AulaUncheckedUpdateWithoutProgressosInput>
+  create: Prisma.XOR<Prisma.AulaCreateWithoutProgressosInput, Prisma.AulaUncheckedCreateWithoutProgressosInput>
+  where?: Prisma.AulaWhereInput
+}
+
+export type AulaUpdateToOneWithWhereWithoutProgressosInput = {
+  where?: Prisma.AulaWhereInput
+  data: Prisma.XOR<Prisma.AulaUpdateWithoutProgressosInput, Prisma.AulaUncheckedUpdateWithoutProgressosInput>
+}
+
+export type AulaUpdateWithoutProgressosInput = {
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfNome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfArquivo?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  atualizadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  questoes?: Prisma.QuestaoUpdateManyWithoutAulaNestedInput
+  disciplina?: Prisma.DisciplinaUpdateOneRequiredWithoutAulasNestedInput
+}
+
+export type AulaUncheckedUpdateWithoutProgressosInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfNome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfArquivo?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  disciplinaId?: Prisma.IntFieldUpdateOperationsInput | number
+  criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  atualizadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  questoes?: Prisma.QuestaoUncheckedUpdateManyWithoutAulaNestedInput
 }
 
 export type AulaCreateManyDisciplinaInput = {
@@ -643,6 +732,7 @@ export type AulaUpdateWithoutDisciplinaInput = {
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   atualizadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   questoes?: Prisma.QuestaoUpdateManyWithoutAulaNestedInput
+  progressos?: Prisma.ProgressoAulaUpdateManyWithoutAulaNestedInput
 }
 
 export type AulaUncheckedUpdateWithoutDisciplinaInput = {
@@ -654,6 +744,7 @@ export type AulaUncheckedUpdateWithoutDisciplinaInput = {
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   atualizadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   questoes?: Prisma.QuestaoUncheckedUpdateManyWithoutAulaNestedInput
+  progressos?: Prisma.ProgressoAulaUncheckedUpdateManyWithoutAulaNestedInput
 }
 
 export type AulaUncheckedUpdateManyWithoutDisciplinaInput = {
@@ -673,10 +764,12 @@ export type AulaUncheckedUpdateManyWithoutDisciplinaInput = {
 
 export type AulaCountOutputType = {
   questoes: number
+  progressos: number
 }
 
 export type AulaCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   questoes?: boolean | AulaCountOutputTypeCountQuestoesArgs
+  progressos?: boolean | AulaCountOutputTypeCountProgressosArgs
 }
 
 /**
@@ -696,6 +789,13 @@ export type AulaCountOutputTypeCountQuestoesArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.QuestaoWhereInput
 }
 
+/**
+ * AulaCountOutputType without action
+ */
+export type AulaCountOutputTypeCountProgressosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProgressoAulaWhereInput
+}
+
 
 export type AulaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -707,6 +807,7 @@ export type AulaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   criadoEm?: boolean
   atualizadoEm?: boolean
   questoes?: boolean | Prisma.Aula$questoesArgs<ExtArgs>
+  progressos?: boolean | Prisma.Aula$progressosArgs<ExtArgs>
   disciplina?: boolean | Prisma.DisciplinaDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.AulaCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["aula"]>
@@ -749,6 +850,7 @@ export type AulaSelectScalar = {
 export type AulaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "titulo" | "videoUrl" | "pdfNome" | "pdfArquivo" | "disciplinaId" | "criadoEm" | "atualizadoEm", ExtArgs["result"]["aula"]>
 export type AulaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   questoes?: boolean | Prisma.Aula$questoesArgs<ExtArgs>
+  progressos?: boolean | Prisma.Aula$progressosArgs<ExtArgs>
   disciplina?: boolean | Prisma.DisciplinaDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.AulaCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -763,6 +865,7 @@ export type $AulaPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "Aula"
   objects: {
     questoes: Prisma.$QuestaoPayload<ExtArgs>[]
+    progressos: Prisma.$ProgressoAulaPayload<ExtArgs>[]
     disciplina: Prisma.$DisciplinaPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1169,6 +1272,7 @@ readonly fields: AulaFieldRefs;
 export interface Prisma__AulaClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   questoes<T extends Prisma.Aula$questoesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Aula$questoesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuestaoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  progressos<T extends Prisma.Aula$progressosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Aula$progressosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProgressoAulaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   disciplina<T extends Prisma.DisciplinaDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DisciplinaDefaultArgs<ExtArgs>>): Prisma.Prisma__DisciplinaClient<runtime.Types.Result.GetResult<Prisma.$DisciplinaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1629,6 +1733,30 @@ export type Aula$questoesArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.QuestaoScalarFieldEnum | Prisma.QuestaoScalarFieldEnum[]
+}
+
+/**
+ * Aula.progressos
+ */
+export type Aula$progressosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProgressoAula
+   */
+  select?: Prisma.ProgressoAulaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProgressoAula
+   */
+  omit?: Prisma.ProgressoAulaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProgressoAulaInclude<ExtArgs> | null
+  where?: Prisma.ProgressoAulaWhereInput
+  orderBy?: Prisma.ProgressoAulaOrderByWithRelationInput | Prisma.ProgressoAulaOrderByWithRelationInput[]
+  cursor?: Prisma.ProgressoAulaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProgressoAulaScalarFieldEnum | Prisma.ProgressoAulaScalarFieldEnum[]
 }
 
 /**

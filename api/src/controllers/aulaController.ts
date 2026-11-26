@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import type { AulaDTO } from "@plataforma-estudos/shared/aula";
+import type { AulaDTO} from "@plataforma-estudos/shared/aula";
 import * as service from "../services/aulaService.js";
 import multer from "multer";
 

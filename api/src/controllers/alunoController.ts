@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import type { CadastroAlunoDTO } from "@plataforma-estudos/shared/aluno";
+import type { CadastroAlunoDTO, AtualizarAlunoDTO } from "@plataforma-estudos/shared/aluno";
 import * as service from "../services/alunoService.js";
 
 export async function getAll(req: Request, res: Response) {
@@ -24,7 +24,7 @@ export async function create(req: Request, res: Response) {
 
 export async function update(req: Request, res: Response) {
   const id: number = Number(req.params.id);
-  const dados: CadastroAlunoDTO = req.body;
+  const dados: AtualizarAlunoDTO = req.body;
   const aluno = await service.update(id, dados);
   return res.json(aluno);
 }

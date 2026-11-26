@@ -1,0 +1,26 @@
+input, select, textarea, button {
+  font-family: inherit;
+}
+
+:root:root {
+  --mantine-color-dimmed: #4f5e63;
+}
+
+.sem-quebra {
+  white-space: nowrap;
+}
+
+@media (max-width: 48em) {
+  .esconde-no-celular {
+    display: none;
+  }
+  .tabela {
+    --table-horizontal-spacing: 6px !important;
+  }
+  .tela-de-entrada {
+    grid-template-columns: 1fr !important;
+  }
+  .faixa-da-plataforma {
+    display: none !important;
+  }
+}

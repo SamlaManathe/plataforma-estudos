@@ -17,7 +17,7 @@ export async function getByTelephone(telefone: string) {
   return await prisma.aluno.findUnique({ where: { telefone } });
 }
 
-export async function getByEmailAndPassword(email: string) {
+export async function getByEmailAndPassword(email: string, senha: string) {
   return await prisma.aluno.findUnique({
     where: { email },
     omit: { senha: false },

@@ -11,15 +11,20 @@ import {
   Title,
 } from "@mantine/core";
 import axios from "axios";
-import { login } from "../services/api.ts";
-import { loginSchema } from "@plataforma-estudos/shared/auth";
+import { login, type UsuarioLogado } from "../../services/api";
+import { loginSchema } from "@plataforma-estudos/shared/login";
 
 type Props = {
   onIrParaCadastro: () => void;
-  onEntrar: (nome: string) => void;
+  onIrParaLoginAluno: () => void;
+  onEntrar: (usuario: UsuarioLogado) => void;
 };
 
-export function LoginPage({ onEntrar, onIrParaCadastro }: Props) {
+export function LoginAdminPage({
+  onEntrar,
+  onIrParaCadastro,
+  onIrParaLoginAluno,
+}: Props) {
   // O que a pessoa digitou
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -39,10 +44,9 @@ export function LoginPage({ onEntrar, onIrParaCadastro }: Props) {
     //fail fast
     const validacaoDados = loginSchema.safeParse({ email, senha });
     if (!validacaoDados.success) {
-      const erros = validacaoDados.error.issues;
-      for (const erro of erros) {
-        if (erro.path[0] === "email") setErroEmail(erro.message);
-        if (erro.path[0] === "senha") setErroSenha(erro.message);
+      for (const issue of validacaoDados.error.issues) {
+        if (issue.path[0] === "email") setErroEmail(issue.message);
+        if (issue.path[0] === "senha") setErroSenha(issue.message);
       }
       return;
     }
@@ -50,15 +54,20 @@ export function LoginPage({ onEntrar, onIrParaCadastro }: Props) {
     setCarregando(true);
 
     try {
-      const aluno = await login(email, senha);
-      onEntrar(aluno.nome);
+      const usuario = await login(validacaoDados.data);
+
+      if (usuario.tipo !== "admin") {
+        setErro("Esta conta é de aluno. Use o login de Aluno.");
+        setCarregando(false);
+        return;
+      }
+
+      onEntrar(usuario);
     } catch (e) {
       if (axios.isAxiosError(e) && e.response) {
-        // A API respondeu com erro (400 ou 401)
         const dados = e.response.data;
         setErro(dados.mensagem);
 
-        // No erro 400, a API manda uma mensagem para cada campo
         if (dados.detalhes) {
           for (const detalhe of dados.detalhes) {
             if (detalhe.campo === "email") setErroEmail(detalhe.mensagem);
@@ -66,7 +75,6 @@ export function LoginPage({ onEntrar, onIrParaCadastro }: Props) {
           }
         }
       } else {
-        // A API nem respondeu
         setErro("Não foi possível conectar à API. Ela está rodando?");
       }
     }
@@ -77,10 +85,10 @@ export function LoginPage({ onEntrar, onIrParaCadastro }: Props) {
   return (
     <Box w="100%" maw={380}>
       <Title order={1} fz={32}>
-        Entrar
+        Área Administrativa
       </Title>
       <Text c="dimmed" mb="xl">
-        Acesse com seu email e senha
+        Acesse com seu email e senha de administrador
       </Text>
 
       <form
@@ -112,9 +120,16 @@ export function LoginPage({ onEntrar, onIrParaCadastro }: Props) {
           </Button>
 
           <Text size="sm" ta="center">
-            Ainda não tem conta?{" "}
+            Ainda não tem conta admin?{" "}
             <Anchor component="button" type="button" onClick={onIrParaCadastro}>
               Cadastre-se
+            </Anchor>
+          </Text>
+
+          <Text size="sm" ta="center" c="dimmed">
+            É aluno?{" "}
+            <Anchor component="button" type="button" onClick={onIrParaLoginAluno}>
+              Voltar para Login de Aluno
             </Anchor>
           </Text>
         </Stack>

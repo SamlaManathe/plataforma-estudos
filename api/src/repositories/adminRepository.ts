@@ -17,6 +17,13 @@ export async function getByTelephone(telefone: string) {
   return await prisma.admin.findUnique({ where: { telefone } });
 }
 
+export async function getByEmailAndPassword(email: string, senha: string) {
+  return await prisma.admin.findUnique({
+    where: { email },
+    omit: { senha: false },
+  });
+}
+
 export async function create(data: CadastroAdminDTO) {
   return await prisma.admin.create({ data });
 }

@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import type { AlunoDTO } from "@plataforma-estudos/shared/aluno";
+import type { CadastroAlunoDTO } from "@plataforma-estudos/shared/aluno";
 import * as service from "../services/alunoService.js";
 
 export async function getAll(req: Request, res: Response) {
@@ -17,14 +17,14 @@ export async function getOne(req: Request, res: Response) {
 }
 
 export async function create(req: Request, res: Response) {
-  const dados: AlunoDTO = req.body;
+  const dados: CadastroAlunoDTO = req.body;
   const aluno = await service.create(dados);
   return res.status(201).json(aluno);
 }
 
 export async function update(req: Request, res: Response) {
   const id: number = Number(req.params.id);
-  const dados: AlunoDTO = req.body;
+  const dados: CadastroAlunoDTO = req.body;
   const aluno = await service.update(id, dados);
   return res.json(aluno);
 }

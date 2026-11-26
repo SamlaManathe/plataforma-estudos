@@ -8,13 +8,15 @@ datasource db {
 }
 
 model Aluno {
-  id           Int      @id @default(autoincrement())
+  id           Int             @id @default(autoincrement())
   nome         String
-  telefone     String   @unique
-  email        String   @unique
+  telefone     String          @unique
+  email        String          @unique
   senha        String
-  criadoEm     DateTime @default(now()) @map("criado_em")
-  atualizadoEm DateTime @updatedAt @map("atualizado_em")
+  respostas    RespostaAluno[]
+  aulasVistas  ProgressoAula[]
+  criadoEm     DateTime        @default(now()) @map("criado_em")
+  atualizadoEm DateTime        @updatedAt @map("atualizado_em")
 
   @@map("alunos")
 }
@@ -33,35 +35,37 @@ model Admin {
 }
 
 model Disciplina {
-  id    Int    @id @default(autoincrement())
-  nome  String @unique
-  aulas Aula[]
+  id          Int       @id @default(autoincrement())
+  nome        String    @unique
+  aulas       Aula[]
 
   @@map("disciplinas")
 }
 
 model Aula {
-  id           Int        @id @default(autoincrement())
+  id           Int             @id @default(autoincrement())
   titulo       String
-  videoUrl     String?    @map("video_url")
-  pdfNome      String?    @map("pdf_nome")
-  pdfArquivo   Bytes?     @map("pdf_arquivo")
-  disciplinaId Int        @map("disciplina_id")
+  videoUrl     String?         @map("video_url")
+  pdfNome      String?         @map("pdf_nome")
+  pdfArquivo   Bytes?          @map("pdf_arquivo")
+  disciplinaId Int             @map("disciplina_id")
   questoes     Questao[]
-  criadoEm     DateTime   @default(now()) @map("criado_em")
-  atualizadoEm DateTime   @updatedAt @map("atualizado_em")
-  disciplina   Disciplina @relation(fields: [disciplinaId], references: [id], onDelete: Cascade)
+  progressos   ProgressoAula[]
+  criadoEm     DateTime        @default(now()) @map("criado_em")
+  atualizadoEm DateTime        @updatedAt @map("atualizado_em")
+  disciplina   Disciplina      @relation(fields: [disciplinaId], references: [id], onDelete: Cascade)
 
   @@map("aulas")
 }
 
 model Questao {
-  id            Int           @id @default(autoincrement())
-  numeroQuestao Int           @map("numero_questao")
-  textoQuestao  String        @db.Text
-  aulaId        Int           @map("aula_id")
-  aula          Aula          @relation(fields: [aulaId], references: [id], onDelete: Cascade)
+  id            Int             @id @default(autoincrement())
+  numeroQuestao Int             @map("numero_questao")
+  textoQuestao  String          @db.Text
+  aulaId        Int             @map("aula_id")
+  aula          Aula            @relation(fields: [aulaId], references: [id], onDelete: Cascade)
   alternativas  Alternativa[]
+  respostas     RespostaAluno[]
 
   @@unique([aulaId, numeroQuestao])
   @@map("questoes")
@@ -77,12 +81,43 @@ enum LetraAlternativa {
 
 model Alternativa {
   id        Int              @id @default(autoincrement())
-  letra     LetraAlternativa // "A", "B", "C", "D" ou "E"
+  letra     LetraAlternativa
   texto     String           @db.Text
   correta   Boolean          @default(false)
   questaoId Int              @map("questao_id")
   questao   Questao          @relation(fields: [questaoId], references: [id], onDelete: Cascade)
+  respostas RespostaAluno[]
 
   @@unique([questaoId, letra])
   @@map("alternativas")
+}
+
+model RespostaAluno {
+  id            Int         @id @default(autoincrement())
+  alunoId       Int         @map("aluno_id")
+  questaoId     Int         @map("questao_id")
+  alternativaId Int         @map("alternativa_id")
+  acertou       Boolean
+  respondidoEm  DateTime    @default(now()) @map("respondido_em")
+
+  aluno       Aluno       @relation(fields: [alunoId], references: [id], onDelete: Cascade)
+  questao     Questao     @relation(fields: [questaoId], references: [id], onDelete: Cascade)
+  alternativa Alternativa @relation(fields: [alternativaId], references: [id], onDelete: Cascade)
+
+  @@unique([alunoId, questaoId])
+  @@map("respostas_alunos")
+}
+
+model ProgressoAula {
+  id          Int      @id @default(autoincrement())
+  alunoId     Int      @map("aluno_id")
+  aulaId      Int      @map("aula_id")
+  assistida   Boolean  @default(true)
+  concluidaEm DateTime @default(now()) @map("concluida_em")
+
+  aluno Aluno @relation(fields: [alunoId], references: [id], onDelete: Cascade)
+  aula  Aula  @relation(fields: [aulaId], references: [id], onDelete: Cascade)
+
+  @@unique([alunoId, aulaId])
+  @@map("progresso_aulas")
 }

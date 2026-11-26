@@ -218,6 +218,7 @@ export type QuestaoWhereInput = {
   aulaId?: Prisma.IntFilter<"Questao"> | number
   aula?: Prisma.XOR<Prisma.AulaScalarRelationFilter, Prisma.AulaWhereInput>
   alternativas?: Prisma.AlternativaListRelationFilter
+  respostas?: Prisma.RespostaAlunoListRelationFilter
 }
 
 export type QuestaoOrderByWithRelationInput = {
@@ -227,6 +228,7 @@ export type QuestaoOrderByWithRelationInput = {
   aulaId?: Prisma.SortOrder
   aula?: Prisma.AulaOrderByWithRelationInput
   alternativas?: Prisma.AlternativaOrderByRelationAggregateInput
+  respostas?: Prisma.RespostaAlunoOrderByRelationAggregateInput
 }
 
 export type QuestaoWhereUniqueInput = Prisma.AtLeast<{
@@ -240,6 +242,7 @@ export type QuestaoWhereUniqueInput = Prisma.AtLeast<{
   aulaId?: Prisma.IntFilter<"Questao"> | number
   aula?: Prisma.XOR<Prisma.AulaScalarRelationFilter, Prisma.AulaWhereInput>
   alternativas?: Prisma.AlternativaListRelationFilter
+  respostas?: Prisma.RespostaAlunoListRelationFilter
 }, "id" | "aulaId_numeroQuestao">
 
 export type QuestaoOrderByWithAggregationInput = {
@@ -269,6 +272,7 @@ export type QuestaoCreateInput = {
   textoQuestao: string
   aula: Prisma.AulaCreateNestedOneWithoutQuestoesInput
   alternativas?: Prisma.AlternativaCreateNestedManyWithoutQuestaoInput
+  respostas?: Prisma.RespostaAlunoCreateNestedManyWithoutQuestaoInput
 }
 
 export type QuestaoUncheckedCreateInput = {
@@ -277,6 +281,7 @@ export type QuestaoUncheckedCreateInput = {
   textoQuestao: string
   aulaId: number
   alternativas?: Prisma.AlternativaUncheckedCreateNestedManyWithoutQuestaoInput
+  respostas?: Prisma.RespostaAlunoUncheckedCreateNestedManyWithoutQuestaoInput
 }
 
 export type QuestaoUpdateInput = {
@@ -284,6 +289,7 @@ export type QuestaoUpdateInput = {
   textoQuestao?: Prisma.StringFieldUpdateOperationsInput | string
   aula?: Prisma.AulaUpdateOneRequiredWithoutQuestoesNestedInput
   alternativas?: Prisma.AlternativaUpdateManyWithoutQuestaoNestedInput
+  respostas?: Prisma.RespostaAlunoUpdateManyWithoutQuestaoNestedInput
 }
 
 export type QuestaoUncheckedUpdateInput = {
@@ -292,6 +298,7 @@ export type QuestaoUncheckedUpdateInput = {
   textoQuestao?: Prisma.StringFieldUpdateOperationsInput | string
   aulaId?: Prisma.IntFieldUpdateOperationsInput | number
   alternativas?: Prisma.AlternativaUncheckedUpdateManyWithoutQuestaoNestedInput
+  respostas?: Prisma.RespostaAlunoUncheckedUpdateManyWithoutQuestaoNestedInput
 }
 
 export type QuestaoCreateManyInput = {
@@ -422,10 +429,25 @@ export type QuestaoUpdateOneRequiredWithoutAlternativasNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.QuestaoUpdateToOneWithWhereWithoutAlternativasInput, Prisma.QuestaoUpdateWithoutAlternativasInput>, Prisma.QuestaoUncheckedUpdateWithoutAlternativasInput>
 }
 
+export type QuestaoCreateNestedOneWithoutRespostasInput = {
+  create?: Prisma.XOR<Prisma.QuestaoCreateWithoutRespostasInput, Prisma.QuestaoUncheckedCreateWithoutRespostasInput>
+  connectOrCreate?: Prisma.QuestaoCreateOrConnectWithoutRespostasInput
+  connect?: Prisma.QuestaoWhereUniqueInput
+}
+
+export type QuestaoUpdateOneRequiredWithoutRespostasNestedInput = {
+  create?: Prisma.XOR<Prisma.QuestaoCreateWithoutRespostasInput, Prisma.QuestaoUncheckedCreateWithoutRespostasInput>
+  connectOrCreate?: Prisma.QuestaoCreateOrConnectWithoutRespostasInput
+  upsert?: Prisma.QuestaoUpsertWithoutRespostasInput
+  connect?: Prisma.QuestaoWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.QuestaoUpdateToOneWithWhereWithoutRespostasInput, Prisma.QuestaoUpdateWithoutRespostasInput>, Prisma.QuestaoUncheckedUpdateWithoutRespostasInput>
+}
+
 export type QuestaoCreateWithoutAulaInput = {
   numeroQuestao: number
   textoQuestao: string
   alternativas?: Prisma.AlternativaCreateNestedManyWithoutQuestaoInput
+  respostas?: Prisma.RespostaAlunoCreateNestedManyWithoutQuestaoInput
 }
 
 export type QuestaoUncheckedCreateWithoutAulaInput = {
@@ -433,6 +455,7 @@ export type QuestaoUncheckedCreateWithoutAulaInput = {
   numeroQuestao: number
   textoQuestao: string
   alternativas?: Prisma.AlternativaUncheckedCreateNestedManyWithoutQuestaoInput
+  respostas?: Prisma.RespostaAlunoUncheckedCreateNestedManyWithoutQuestaoInput
 }
 
 export type QuestaoCreateOrConnectWithoutAulaInput = {
@@ -475,6 +498,7 @@ export type QuestaoCreateWithoutAlternativasInput = {
   numeroQuestao: number
   textoQuestao: string
   aula: Prisma.AulaCreateNestedOneWithoutQuestoesInput
+  respostas?: Prisma.RespostaAlunoCreateNestedManyWithoutQuestaoInput
 }
 
 export type QuestaoUncheckedCreateWithoutAlternativasInput = {
@@ -482,6 +506,7 @@ export type QuestaoUncheckedCreateWithoutAlternativasInput = {
   numeroQuestao: number
   textoQuestao: string
   aulaId: number
+  respostas?: Prisma.RespostaAlunoUncheckedCreateNestedManyWithoutQuestaoInput
 }
 
 export type QuestaoCreateOrConnectWithoutAlternativasInput = {
@@ -504,6 +529,7 @@ export type QuestaoUpdateWithoutAlternativasInput = {
   numeroQuestao?: Prisma.IntFieldUpdateOperationsInput | number
   textoQuestao?: Prisma.StringFieldUpdateOperationsInput | string
   aula?: Prisma.AulaUpdateOneRequiredWithoutQuestoesNestedInput
+  respostas?: Prisma.RespostaAlunoUpdateManyWithoutQuestaoNestedInput
 }
 
 export type QuestaoUncheckedUpdateWithoutAlternativasInput = {
@@ -511,6 +537,53 @@ export type QuestaoUncheckedUpdateWithoutAlternativasInput = {
   numeroQuestao?: Prisma.IntFieldUpdateOperationsInput | number
   textoQuestao?: Prisma.StringFieldUpdateOperationsInput | string
   aulaId?: Prisma.IntFieldUpdateOperationsInput | number
+  respostas?: Prisma.RespostaAlunoUncheckedUpdateManyWithoutQuestaoNestedInput
+}
+
+export type QuestaoCreateWithoutRespostasInput = {
+  numeroQuestao: number
+  textoQuestao: string
+  aula: Prisma.AulaCreateNestedOneWithoutQuestoesInput
+  alternativas?: Prisma.AlternativaCreateNestedManyWithoutQuestaoInput
+}
+
+export type QuestaoUncheckedCreateWithoutRespostasInput = {
+  id?: number
+  numeroQuestao: number
+  textoQuestao: string
+  aulaId: number
+  alternativas?: Prisma.AlternativaUncheckedCreateNestedManyWithoutQuestaoInput
+}
+
+export type QuestaoCreateOrConnectWithoutRespostasInput = {
+  where: Prisma.QuestaoWhereUniqueInput
+  create: Prisma.XOR<Prisma.QuestaoCreateWithoutRespostasInput, Prisma.QuestaoUncheckedCreateWithoutRespostasInput>
+}
+
+export type QuestaoUpsertWithoutRespostasInput = {
+  update: Prisma.XOR<Prisma.QuestaoUpdateWithoutRespostasInput, Prisma.QuestaoUncheckedUpdateWithoutRespostasInput>
+  create: Prisma.XOR<Prisma.QuestaoCreateWithoutRespostasInput, Prisma.QuestaoUncheckedCreateWithoutRespostasInput>
+  where?: Prisma.QuestaoWhereInput
+}
+
+export type QuestaoUpdateToOneWithWhereWithoutRespostasInput = {
+  where?: Prisma.QuestaoWhereInput
+  data: Prisma.XOR<Prisma.QuestaoUpdateWithoutRespostasInput, Prisma.QuestaoUncheckedUpdateWithoutRespostasInput>
+}
+
+export type QuestaoUpdateWithoutRespostasInput = {
+  numeroQuestao?: Prisma.IntFieldUpdateOperationsInput | number
+  textoQuestao?: Prisma.StringFieldUpdateOperationsInput | string
+  aula?: Prisma.AulaUpdateOneRequiredWithoutQuestoesNestedInput
+  alternativas?: Prisma.AlternativaUpdateManyWithoutQuestaoNestedInput
+}
+
+export type QuestaoUncheckedUpdateWithoutRespostasInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  numeroQuestao?: Prisma.IntFieldUpdateOperationsInput | number
+  textoQuestao?: Prisma.StringFieldUpdateOperationsInput | string
+  aulaId?: Prisma.IntFieldUpdateOperationsInput | number
+  alternativas?: Prisma.AlternativaUncheckedUpdateManyWithoutQuestaoNestedInput
 }
 
 export type QuestaoCreateManyAulaInput = {
@@ -523,6 +596,7 @@ export type QuestaoUpdateWithoutAulaInput = {
   numeroQuestao?: Prisma.IntFieldUpdateOperationsInput | number
   textoQuestao?: Prisma.StringFieldUpdateOperationsInput | string
   alternativas?: Prisma.AlternativaUpdateManyWithoutQuestaoNestedInput
+  respostas?: Prisma.RespostaAlunoUpdateManyWithoutQuestaoNestedInput
 }
 
 export type QuestaoUncheckedUpdateWithoutAulaInput = {
@@ -530,6 +604,7 @@ export type QuestaoUncheckedUpdateWithoutAulaInput = {
   numeroQuestao?: Prisma.IntFieldUpdateOperationsInput | number
   textoQuestao?: Prisma.StringFieldUpdateOperationsInput | string
   alternativas?: Prisma.AlternativaUncheckedUpdateManyWithoutQuestaoNestedInput
+  respostas?: Prisma.RespostaAlunoUncheckedUpdateManyWithoutQuestaoNestedInput
 }
 
 export type QuestaoUncheckedUpdateManyWithoutAulaInput = {
@@ -545,10 +620,12 @@ export type QuestaoUncheckedUpdateManyWithoutAulaInput = {
 
 export type QuestaoCountOutputType = {
   alternativas: number
+  respostas: number
 }
 
 export type QuestaoCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   alternativas?: boolean | QuestaoCountOutputTypeCountAlternativasArgs
+  respostas?: boolean | QuestaoCountOutputTypeCountRespostasArgs
 }
 
 /**
@@ -568,6 +645,13 @@ export type QuestaoCountOutputTypeCountAlternativasArgs<ExtArgs extends runtime.
   where?: Prisma.AlternativaWhereInput
 }
 
+/**
+ * QuestaoCountOutputType without action
+ */
+export type QuestaoCountOutputTypeCountRespostasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RespostaAlunoWhereInput
+}
+
 
 export type QuestaoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -576,6 +660,7 @@ export type QuestaoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   aulaId?: boolean
   aula?: boolean | Prisma.AulaDefaultArgs<ExtArgs>
   alternativas?: boolean | Prisma.Questao$alternativasArgs<ExtArgs>
+  respostas?: boolean | Prisma.Questao$respostasArgs<ExtArgs>
   _count?: boolean | Prisma.QuestaoCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["questao"]>
 
@@ -606,6 +691,7 @@ export type QuestaoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type QuestaoInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   aula?: boolean | Prisma.AulaDefaultArgs<ExtArgs>
   alternativas?: boolean | Prisma.Questao$alternativasArgs<ExtArgs>
+  respostas?: boolean | Prisma.Questao$respostasArgs<ExtArgs>
   _count?: boolean | Prisma.QuestaoCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type QuestaoIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -620,6 +706,7 @@ export type $QuestaoPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   objects: {
     aula: Prisma.$AulaPayload<ExtArgs>
     alternativas: Prisma.$AlternativaPayload<ExtArgs>[]
+    respostas: Prisma.$RespostaAlunoPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1022,6 +1109,7 @@ export interface Prisma__QuestaoClient<T, Null = never, ExtArgs extends runtime.
   readonly [Symbol.toStringTag]: "PrismaPromise"
   aula<T extends Prisma.AulaDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AulaDefaultArgs<ExtArgs>>): Prisma.Prisma__AulaClient<runtime.Types.Result.GetResult<Prisma.$AulaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   alternativas<T extends Prisma.Questao$alternativasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Questao$alternativasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AlternativaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  respostas<T extends Prisma.Questao$respostasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Questao$respostasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RespostaAlunoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1477,6 +1565,30 @@ export type Questao$alternativasArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.AlternativaScalarFieldEnum | Prisma.AlternativaScalarFieldEnum[]
+}
+
+/**
+ * Questao.respostas
+ */
+export type Questao$respostasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RespostaAluno
+   */
+  select?: Prisma.RespostaAlunoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RespostaAluno
+   */
+  omit?: Prisma.RespostaAlunoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RespostaAlunoInclude<ExtArgs> | null
+  where?: Prisma.RespostaAlunoWhereInput
+  orderBy?: Prisma.RespostaAlunoOrderByWithRelationInput | Prisma.RespostaAlunoOrderByWithRelationInput[]
+  cursor?: Prisma.RespostaAlunoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RespostaAlunoScalarFieldEnum | Prisma.RespostaAlunoScalarFieldEnum[]
 }
 
 /**

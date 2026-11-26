@@ -402,7 +402,9 @@ export const ModelName = {
   Disciplina: 'Disciplina',
   Aula: 'Aula',
   Questao: 'Questao',
-  Alternativa: 'Alternativa'
+  Alternativa: 'Alternativa',
+  RespostaAluno: 'RespostaAluno',
+  ProgressoAula: 'ProgressoAula'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -418,7 +420,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "aluno" | "admin" | "disciplina" | "aula" | "questao" | "alternativa"
+    modelProps: "aluno" | "admin" | "disciplina" | "aula" | "questao" | "alternativa" | "respostaAluno" | "progressoAula"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -866,6 +868,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    RespostaAluno: {
+      payload: Prisma.$RespostaAlunoPayload<ExtArgs>
+      fields: Prisma.RespostaAlunoFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RespostaAlunoFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RespostaAlunoPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RespostaAlunoFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RespostaAlunoPayload>
+        }
+        findFirst: {
+          args: Prisma.RespostaAlunoFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RespostaAlunoPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RespostaAlunoFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RespostaAlunoPayload>
+        }
+        findMany: {
+          args: Prisma.RespostaAlunoFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RespostaAlunoPayload>[]
+        }
+        create: {
+          args: Prisma.RespostaAlunoCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RespostaAlunoPayload>
+        }
+        createMany: {
+          args: Prisma.RespostaAlunoCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RespostaAlunoCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RespostaAlunoPayload>[]
+        }
+        delete: {
+          args: Prisma.RespostaAlunoDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RespostaAlunoPayload>
+        }
+        update: {
+          args: Prisma.RespostaAlunoUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RespostaAlunoPayload>
+        }
+        deleteMany: {
+          args: Prisma.RespostaAlunoDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RespostaAlunoUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RespostaAlunoUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RespostaAlunoPayload>[]
+        }
+        upsert: {
+          args: Prisma.RespostaAlunoUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RespostaAlunoPayload>
+        }
+        aggregate: {
+          args: Prisma.RespostaAlunoAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRespostaAluno>
+        }
+        groupBy: {
+          args: Prisma.RespostaAlunoGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RespostaAlunoGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RespostaAlunoCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RespostaAlunoCountAggregateOutputType> | number
+        }
+      }
+    }
+    ProgressoAula: {
+      payload: Prisma.$ProgressoAulaPayload<ExtArgs>
+      fields: Prisma.ProgressoAulaFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProgressoAulaFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressoAulaPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProgressoAulaFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressoAulaPayload>
+        }
+        findFirst: {
+          args: Prisma.ProgressoAulaFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressoAulaPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProgressoAulaFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressoAulaPayload>
+        }
+        findMany: {
+          args: Prisma.ProgressoAulaFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressoAulaPayload>[]
+        }
+        create: {
+          args: Prisma.ProgressoAulaCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressoAulaPayload>
+        }
+        createMany: {
+          args: Prisma.ProgressoAulaCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProgressoAulaCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressoAulaPayload>[]
+        }
+        delete: {
+          args: Prisma.ProgressoAulaDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressoAulaPayload>
+        }
+        update: {
+          args: Prisma.ProgressoAulaUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressoAulaPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProgressoAulaDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProgressoAulaUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProgressoAulaUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressoAulaPayload>[]
+        }
+        upsert: {
+          args: Prisma.ProgressoAulaUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgressoAulaPayload>
+        }
+        aggregate: {
+          args: Prisma.ProgressoAulaAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProgressoAula>
+        }
+        groupBy: {
+          args: Prisma.ProgressoAulaGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProgressoAulaGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProgressoAulaCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProgressoAulaCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -972,6 +1122,29 @@ export const AlternativaScalarFieldEnum = {
 } as const
 
 export type AlternativaScalarFieldEnum = (typeof AlternativaScalarFieldEnum)[keyof typeof AlternativaScalarFieldEnum]
+
+
+export const RespostaAlunoScalarFieldEnum = {
+  id: 'id',
+  alunoId: 'alunoId',
+  questaoId: 'questaoId',
+  alternativaId: 'alternativaId',
+  acertou: 'acertou',
+  respondidoEm: 'respondidoEm'
+} as const
+
+export type RespostaAlunoScalarFieldEnum = (typeof RespostaAlunoScalarFieldEnum)[keyof typeof RespostaAlunoScalarFieldEnum]
+
+
+export const ProgressoAulaScalarFieldEnum = {
+  id: 'id',
+  alunoId: 'alunoId',
+  aulaId: 'aulaId',
+  assistida: 'assistida',
+  concluidaEm: 'concluidaEm'
+} as const
+
+export type ProgressoAulaScalarFieldEnum = (typeof ProgressoAulaScalarFieldEnum)[keyof typeof ProgressoAulaScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1251,6 +1424,8 @@ export type GlobalOmitConfig = {
   aula?: Prisma.AulaOmit
   questao?: Prisma.QuestaoOmit
   alternativa?: Prisma.AlternativaOmit
+  respostaAluno?: Prisma.RespostaAlunoOmit
+  progressoAula?: Prisma.ProgressoAulaOmit
 }
 
 /* Types for Logging */

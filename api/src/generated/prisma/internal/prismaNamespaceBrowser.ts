@@ -56,7 +56,9 @@ export const ModelName = {
   Disciplina: 'Disciplina',
   Aula: 'Aula',
   Questao: 'Questao',
-  Alternativa: 'Alternativa'
+  Alternativa: 'Alternativa',
+  RespostaAluno: 'RespostaAluno',
+  ProgressoAula: 'ProgressoAula'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -142,6 +144,29 @@ export const AlternativaScalarFieldEnum = {
 } as const
 
 export type AlternativaScalarFieldEnum = (typeof AlternativaScalarFieldEnum)[keyof typeof AlternativaScalarFieldEnum]
+
+
+export const RespostaAlunoScalarFieldEnum = {
+  id: 'id',
+  alunoId: 'alunoId',
+  questaoId: 'questaoId',
+  alternativaId: 'alternativaId',
+  acertou: 'acertou',
+  respondidoEm: 'respondidoEm'
+} as const
+
+export type RespostaAlunoScalarFieldEnum = (typeof RespostaAlunoScalarFieldEnum)[keyof typeof RespostaAlunoScalarFieldEnum]
+
+
+export const ProgressoAulaScalarFieldEnum = {
+  id: 'id',
+  alunoId: 'alunoId',
+  aulaId: 'aulaId',
+  assistida: 'assistida',
+  concluidaEm: 'concluidaEm'
+} as const
+
+export type ProgressoAulaScalarFieldEnum = (typeof ProgressoAulaScalarFieldEnum)[keyof typeof ProgressoAulaScalarFieldEnum]
 
 
 export const SortOrder = {

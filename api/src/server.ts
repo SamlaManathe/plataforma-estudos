@@ -14,6 +14,7 @@ import aulaRoutes from "./routes/aulaRoutes.js";
 import questaoRoutes from "./routes/questaoRoutes.js";
 import alternativaRoutes from "./routes/alternativaRoutes.js";
 import loginRoutes from "./routes/loginRoutes.js";
+import progressoRoutes from "./routes/progressoRoutes.js";
 import swaggerUi from "swagger-ui-express";
 
 dotenv.config();
@@ -33,6 +34,7 @@ app.use(aulaRoutes);
 app.use(questaoRoutes);
 app.use(alternativaRoutes);
 app.use(loginRoutes);
+app.use(progressoRoutes);
 
 // Captura os throw new Error() dos services e devolve HTTP 400
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
@@ -41,4 +43,5 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
 app.listen(PORT, () => {
   console.log(`API rodando na porta ${PORT}`);
+  console.log(`Documentação disponível em: http://localhost:${PORT}/docs`);
 });

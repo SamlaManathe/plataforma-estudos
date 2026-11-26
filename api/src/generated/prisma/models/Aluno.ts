@@ -232,6 +232,8 @@ export type AlunoWhereInput = {
   senha?: Prisma.StringFilter<"Aluno"> | string
   criadoEm?: Prisma.DateTimeFilter<"Aluno"> | Date | string
   atualizadoEm?: Prisma.DateTimeFilter<"Aluno"> | Date | string
+  respostas?: Prisma.RespostaAlunoListRelationFilter
+  aulasVistas?: Prisma.ProgressoAulaListRelationFilter
 }
 
 export type AlunoOrderByWithRelationInput = {
@@ -242,6 +244,8 @@ export type AlunoOrderByWithRelationInput = {
   senha?: Prisma.SortOrder
   criadoEm?: Prisma.SortOrder
   atualizadoEm?: Prisma.SortOrder
+  respostas?: Prisma.RespostaAlunoOrderByRelationAggregateInput
+  aulasVistas?: Prisma.ProgressoAulaOrderByRelationAggregateInput
 }
 
 export type AlunoWhereUniqueInput = Prisma.AtLeast<{
@@ -255,6 +259,8 @@ export type AlunoWhereUniqueInput = Prisma.AtLeast<{
   senha?: Prisma.StringFilter<"Aluno"> | string
   criadoEm?: Prisma.DateTimeFilter<"Aluno"> | Date | string
   atualizadoEm?: Prisma.DateTimeFilter<"Aluno"> | Date | string
+  respostas?: Prisma.RespostaAlunoListRelationFilter
+  aulasVistas?: Prisma.ProgressoAulaListRelationFilter
 }, "id" | "telefone" | "email">
 
 export type AlunoOrderByWithAggregationInput = {
@@ -292,6 +298,8 @@ export type AlunoCreateInput = {
   senha: string
   criadoEm?: Date | string
   atualizadoEm?: Date | string
+  respostas?: Prisma.RespostaAlunoCreateNestedManyWithoutAlunoInput
+  aulasVistas?: Prisma.ProgressoAulaCreateNestedManyWithoutAlunoInput
 }
 
 export type AlunoUncheckedCreateInput = {
@@ -302,6 +310,8 @@ export type AlunoUncheckedCreateInput = {
   senha: string
   criadoEm?: Date | string
   atualizadoEm?: Date | string
+  respostas?: Prisma.RespostaAlunoUncheckedCreateNestedManyWithoutAlunoInput
+  aulasVistas?: Prisma.ProgressoAulaUncheckedCreateNestedManyWithoutAlunoInput
 }
 
 export type AlunoUpdateInput = {
@@ -311,6 +321,8 @@ export type AlunoUpdateInput = {
   senha?: Prisma.StringFieldUpdateOperationsInput | string
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   atualizadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  respostas?: Prisma.RespostaAlunoUpdateManyWithoutAlunoNestedInput
+  aulasVistas?: Prisma.ProgressoAulaUpdateManyWithoutAlunoNestedInput
 }
 
 export type AlunoUncheckedUpdateInput = {
@@ -321,6 +333,8 @@ export type AlunoUncheckedUpdateInput = {
   senha?: Prisma.StringFieldUpdateOperationsInput | string
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   atualizadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  respostas?: Prisma.RespostaAlunoUncheckedUpdateManyWithoutAlunoNestedInput
+  aulasVistas?: Prisma.ProgressoAulaUncheckedUpdateManyWithoutAlunoNestedInput
 }
 
 export type AlunoCreateManyInput = {
@@ -390,6 +404,11 @@ export type AlunoSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
 }
 
+export type AlunoScalarRelationFilter = {
+  is?: Prisma.AlunoWhereInput
+  isNot?: Prisma.AlunoWhereInput
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -406,6 +425,188 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type AlunoCreateNestedOneWithoutRespostasInput = {
+  create?: Prisma.XOR<Prisma.AlunoCreateWithoutRespostasInput, Prisma.AlunoUncheckedCreateWithoutRespostasInput>
+  connectOrCreate?: Prisma.AlunoCreateOrConnectWithoutRespostasInput
+  connect?: Prisma.AlunoWhereUniqueInput
+}
+
+export type AlunoUpdateOneRequiredWithoutRespostasNestedInput = {
+  create?: Prisma.XOR<Prisma.AlunoCreateWithoutRespostasInput, Prisma.AlunoUncheckedCreateWithoutRespostasInput>
+  connectOrCreate?: Prisma.AlunoCreateOrConnectWithoutRespostasInput
+  upsert?: Prisma.AlunoUpsertWithoutRespostasInput
+  connect?: Prisma.AlunoWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AlunoUpdateToOneWithWhereWithoutRespostasInput, Prisma.AlunoUpdateWithoutRespostasInput>, Prisma.AlunoUncheckedUpdateWithoutRespostasInput>
+}
+
+export type AlunoCreateNestedOneWithoutAulasVistasInput = {
+  create?: Prisma.XOR<Prisma.AlunoCreateWithoutAulasVistasInput, Prisma.AlunoUncheckedCreateWithoutAulasVistasInput>
+  connectOrCreate?: Prisma.AlunoCreateOrConnectWithoutAulasVistasInput
+  connect?: Prisma.AlunoWhereUniqueInput
+}
+
+export type AlunoUpdateOneRequiredWithoutAulasVistasNestedInput = {
+  create?: Prisma.XOR<Prisma.AlunoCreateWithoutAulasVistasInput, Prisma.AlunoUncheckedCreateWithoutAulasVistasInput>
+  connectOrCreate?: Prisma.AlunoCreateOrConnectWithoutAulasVistasInput
+  upsert?: Prisma.AlunoUpsertWithoutAulasVistasInput
+  connect?: Prisma.AlunoWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AlunoUpdateToOneWithWhereWithoutAulasVistasInput, Prisma.AlunoUpdateWithoutAulasVistasInput>, Prisma.AlunoUncheckedUpdateWithoutAulasVistasInput>
+}
+
+export type AlunoCreateWithoutRespostasInput = {
+  nome: string
+  telefone: string
+  email: string
+  senha: string
+  criadoEm?: Date | string
+  atualizadoEm?: Date | string
+  aulasVistas?: Prisma.ProgressoAulaCreateNestedManyWithoutAlunoInput
+}
+
+export type AlunoUncheckedCreateWithoutRespostasInput = {
+  id?: number
+  nome: string
+  telefone: string
+  email: string
+  senha: string
+  criadoEm?: Date | string
+  atualizadoEm?: Date | string
+  aulasVistas?: Prisma.ProgressoAulaUncheckedCreateNestedManyWithoutAlunoInput
+}
+
+export type AlunoCreateOrConnectWithoutRespostasInput = {
+  where: Prisma.AlunoWhereUniqueInput
+  create: Prisma.XOR<Prisma.AlunoCreateWithoutRespostasInput, Prisma.AlunoUncheckedCreateWithoutRespostasInput>
+}
+
+export type AlunoUpsertWithoutRespostasInput = {
+  update: Prisma.XOR<Prisma.AlunoUpdateWithoutRespostasInput, Prisma.AlunoUncheckedUpdateWithoutRespostasInput>
+  create: Prisma.XOR<Prisma.AlunoCreateWithoutRespostasInput, Prisma.AlunoUncheckedCreateWithoutRespostasInput>
+  where?: Prisma.AlunoWhereInput
+}
+
+export type AlunoUpdateToOneWithWhereWithoutRespostasInput = {
+  where?: Prisma.AlunoWhereInput
+  data: Prisma.XOR<Prisma.AlunoUpdateWithoutRespostasInput, Prisma.AlunoUncheckedUpdateWithoutRespostasInput>
+}
+
+export type AlunoUpdateWithoutRespostasInput = {
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  telefone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  senha?: Prisma.StringFieldUpdateOperationsInput | string
+  criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  atualizadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  aulasVistas?: Prisma.ProgressoAulaUpdateManyWithoutAlunoNestedInput
+}
+
+export type AlunoUncheckedUpdateWithoutRespostasInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  telefone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  senha?: Prisma.StringFieldUpdateOperationsInput | string
+  criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  atualizadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  aulasVistas?: Prisma.ProgressoAulaUncheckedUpdateManyWithoutAlunoNestedInput
+}
+
+export type AlunoCreateWithoutAulasVistasInput = {
+  nome: string
+  telefone: string
+  email: string
+  senha: string
+  criadoEm?: Date | string
+  atualizadoEm?: Date | string
+  respostas?: Prisma.RespostaAlunoCreateNestedManyWithoutAlunoInput
+}
+
+export type AlunoUncheckedCreateWithoutAulasVistasInput = {
+  id?: number
+  nome: string
+  telefone: string
+  email: string
+  senha: string
+  criadoEm?: Date | string
+  atualizadoEm?: Date | string
+  respostas?: Prisma.RespostaAlunoUncheckedCreateNestedManyWithoutAlunoInput
+}
+
+export type AlunoCreateOrConnectWithoutAulasVistasInput = {
+  where: Prisma.AlunoWhereUniqueInput
+  create: Prisma.XOR<Prisma.AlunoCreateWithoutAulasVistasInput, Prisma.AlunoUncheckedCreateWithoutAulasVistasInput>
+}
+
+export type AlunoUpsertWithoutAulasVistasInput = {
+  update: Prisma.XOR<Prisma.AlunoUpdateWithoutAulasVistasInput, Prisma.AlunoUncheckedUpdateWithoutAulasVistasInput>
+  create: Prisma.XOR<Prisma.AlunoCreateWithoutAulasVistasInput, Prisma.AlunoUncheckedCreateWithoutAulasVistasInput>
+  where?: Prisma.AlunoWhereInput
+}
+
+export type AlunoUpdateToOneWithWhereWithoutAulasVistasInput = {
+  where?: Prisma.AlunoWhereInput
+  data: Prisma.XOR<Prisma.AlunoUpdateWithoutAulasVistasInput, Prisma.AlunoUncheckedUpdateWithoutAulasVistasInput>
+}
+
+export type AlunoUpdateWithoutAulasVistasInput = {
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  telefone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  senha?: Prisma.StringFieldUpdateOperationsInput | string
+  criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  atualizadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  respostas?: Prisma.RespostaAlunoUpdateManyWithoutAlunoNestedInput
+}
+
+export type AlunoUncheckedUpdateWithoutAulasVistasInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  telefone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  senha?: Prisma.StringFieldUpdateOperationsInput | string
+  criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  atualizadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  respostas?: Prisma.RespostaAlunoUncheckedUpdateManyWithoutAlunoNestedInput
+}
+
+
+/**
+ * Count Type AlunoCountOutputType
+ */
+
+export type AlunoCountOutputType = {
+  respostas: number
+  aulasVistas: number
+}
+
+export type AlunoCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  respostas?: boolean | AlunoCountOutputTypeCountRespostasArgs
+  aulasVistas?: boolean | AlunoCountOutputTypeCountAulasVistasArgs
+}
+
+/**
+ * AlunoCountOutputType without action
+ */
+export type AlunoCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AlunoCountOutputType
+   */
+  select?: Prisma.AlunoCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * AlunoCountOutputType without action
+ */
+export type AlunoCountOutputTypeCountRespostasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RespostaAlunoWhereInput
+}
+
+/**
+ * AlunoCountOutputType without action
+ */
+export type AlunoCountOutputTypeCountAulasVistasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProgressoAulaWhereInput
+}
 
 
 export type AlunoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -416,6 +617,9 @@ export type AlunoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   senha?: boolean
   criadoEm?: boolean
   atualizadoEm?: boolean
+  respostas?: boolean | Prisma.Aluno$respostasArgs<ExtArgs>
+  aulasVistas?: boolean | Prisma.Aluno$aulasVistasArgs<ExtArgs>
+  _count?: boolean | Prisma.AlunoCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["aluno"]>
 
 export type AlunoSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -449,10 +653,20 @@ export type AlunoSelectScalar = {
 }
 
 export type AlunoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nome" | "telefone" | "email" | "senha" | "criadoEm" | "atualizadoEm", ExtArgs["result"]["aluno"]>
+export type AlunoInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  respostas?: boolean | Prisma.Aluno$respostasArgs<ExtArgs>
+  aulasVistas?: boolean | Prisma.Aluno$aulasVistasArgs<ExtArgs>
+  _count?: boolean | Prisma.AlunoCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type AlunoIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type AlunoIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $AlunoPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Aluno"
-  objects: {}
+  objects: {
+    respostas: Prisma.$RespostaAlunoPayload<ExtArgs>[]
+    aulasVistas: Prisma.$ProgressoAulaPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     nome: string
@@ -855,6 +1069,8 @@ readonly fields: AlunoFieldRefs;
  */
 export interface Prisma__AlunoClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  respostas<T extends Prisma.Aluno$respostasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Aluno$respostasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RespostaAlunoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aulasVistas<T extends Prisma.Aluno$aulasVistasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Aluno$aulasVistasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProgressoAulaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -908,6 +1124,10 @@ export type AlunoFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   omit?: Prisma.AlunoOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlunoInclude<ExtArgs> | null
+  /**
    * Filter, which Aluno to fetch.
    */
   where: Prisma.AlunoWhereUniqueInput
@@ -926,6 +1146,10 @@ export type AlunoFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.
    */
   omit?: Prisma.AlunoOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlunoInclude<ExtArgs> | null
+  /**
    * Filter, which Aluno to fetch.
    */
   where: Prisma.AlunoWhereUniqueInput
@@ -943,6 +1167,10 @@ export type AlunoFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Omit specific fields from the Aluno
    */
   omit?: Prisma.AlunoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlunoInclude<ExtArgs> | null
   /**
    * Filter, which Aluno to fetch.
    */
@@ -992,6 +1220,10 @@ export type AlunoFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   omit?: Prisma.AlunoOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlunoInclude<ExtArgs> | null
+  /**
    * Filter, which Aluno to fetch.
    */
   where?: Prisma.AlunoWhereInput
@@ -1039,6 +1271,10 @@ export type AlunoFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Aluno
    */
   omit?: Prisma.AlunoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlunoInclude<ExtArgs> | null
   /**
    * Filter, which Alunos to fetch.
    */
@@ -1088,6 +1324,10 @@ export type AlunoCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    */
   omit?: Prisma.AlunoOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlunoInclude<ExtArgs> | null
+  /**
    * The data needed to create a Aluno.
    */
   data: Prisma.XOR<Prisma.AlunoCreateInput, Prisma.AlunoUncheckedCreateInput>
@@ -1135,6 +1375,10 @@ export type AlunoUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    * Omit specific fields from the Aluno
    */
   omit?: Prisma.AlunoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlunoInclude<ExtArgs> | null
   /**
    * The data needed to update a Aluno.
    */
@@ -1202,6 +1446,10 @@ export type AlunoUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    */
   omit?: Prisma.AlunoOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlunoInclude<ExtArgs> | null
+  /**
    * The filter to search for the Aluno to update in case it exists.
    */
   where: Prisma.AlunoWhereUniqueInput
@@ -1228,6 +1476,10 @@ export type AlunoDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    */
   omit?: Prisma.AlunoOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlunoInclude<ExtArgs> | null
+  /**
    * Filter which Aluno to delete.
    */
   where: Prisma.AlunoWhereUniqueInput
@@ -1248,6 +1500,54 @@ export type AlunoDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
+ * Aluno.respostas
+ */
+export type Aluno$respostasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RespostaAluno
+   */
+  select?: Prisma.RespostaAlunoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RespostaAluno
+   */
+  omit?: Prisma.RespostaAlunoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RespostaAlunoInclude<ExtArgs> | null
+  where?: Prisma.RespostaAlunoWhereInput
+  orderBy?: Prisma.RespostaAlunoOrderByWithRelationInput | Prisma.RespostaAlunoOrderByWithRelationInput[]
+  cursor?: Prisma.RespostaAlunoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RespostaAlunoScalarFieldEnum | Prisma.RespostaAlunoScalarFieldEnum[]
+}
+
+/**
+ * Aluno.aulasVistas
+ */
+export type Aluno$aulasVistasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProgressoAula
+   */
+  select?: Prisma.ProgressoAulaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProgressoAula
+   */
+  omit?: Prisma.ProgressoAulaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProgressoAulaInclude<ExtArgs> | null
+  where?: Prisma.ProgressoAulaWhereInput
+  orderBy?: Prisma.ProgressoAulaOrderByWithRelationInput | Prisma.ProgressoAulaOrderByWithRelationInput[]
+  cursor?: Prisma.ProgressoAulaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProgressoAulaScalarFieldEnum | Prisma.ProgressoAulaScalarFieldEnum[]
+}
+
+/**
  * Aluno without action
  */
 export type AlunoDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1259,4 +1559,8 @@ export type AlunoDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Omit specific fields from the Aluno
    */
   omit?: Prisma.AlunoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlunoInclude<ExtArgs> | null
 }

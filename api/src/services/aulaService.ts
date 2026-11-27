@@ -5,11 +5,11 @@ import * as disciplinaRepository from "../repositories/disciplinaRepository.js";
 
 type AulaSemPDF = Omit<Aula, "pdfArquivo">;
 
-export async function getAll(): Promise<Aula[]> {
+export async function getAll(): Promise<AulaSemPDF[]> {
   return await repository.getAll();
 }
 
-export async function getOne(id: number): Promise<Aula | null> {
+export async function getOne(id: number): Promise<AulaSemPDF | null> {
   return await repository.getOne(id);
 }
 
@@ -20,7 +20,7 @@ export async function getPdf(id: number) {
 type ArquivoPDF = {
   nome: string;
   arquivo: Buffer;
-};  // transferir para outro lugar (no zod, talvez)
+}; // transferir para outro lugar (no zod, talvez)
 
 export async function create(
   dados: AulaDTO,
@@ -56,6 +56,7 @@ export async function update(
   id: number,
   dados: AulaDTO,
   pdf?: ArquivoPDF,
+  removerPdf?: boolean,
 ): Promise<AulaSemPDF> {
   const existente = await repository.getOne(id);
 
@@ -77,6 +78,7 @@ export async function update(
     {
       ...dados,
       disciplinaId: Number(dados.disciplinaId),
+      ...(removerPdf !== undefined && { removerPdf }),
     },
     pdf,
   );

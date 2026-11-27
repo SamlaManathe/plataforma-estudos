@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import type { QuestaoDTO } from "@plataforma-estudos/shared/questao";
+import { parseId } from "../middleware/validarSchema.js";
 import * as service from "../services/questaoService.js";
 
 export async function getAll(req: Request, res: Response) {
@@ -8,7 +9,7 @@ export async function getAll(req: Request, res: Response) {
 }
 
 export async function getOne(req: Request, res: Response) {
-  const id: number = Number(req.params.id);
+  const id: number = parseId(req.params.id);
   const questao = await service.getOne(id);
   if (!questao) {
     return res.status(404).json({ mensagem: "Questão não encontrada" });
@@ -23,14 +24,14 @@ export async function create(req: Request, res: Response) {
 }
 
 export async function update(req: Request, res: Response) {
-  const id: number = Number(req.params.id);
+  const id: number = parseId(req.params.id);
   const dados: QuestaoDTO = req.body;
   const questao = await service.update(id, dados);
   return res.json(questao);
 }
 
 export async function remove(req: Request, res: Response) {
-  const id: number = Number(req.params.id);
+  const id: number = parseId(req.params.id);
   await service.remove(id);
   return res.status(204).send();
 }

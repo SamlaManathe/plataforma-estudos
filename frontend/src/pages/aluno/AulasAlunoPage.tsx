@@ -209,7 +209,7 @@ export function AulasAlunoPage({
             leftSection={<IconArrowLeft size={16} />}
             onClick={onVoltar}
           >
-            Voltar para {disciplinaNome}
+            Voltar para página de disciplinas
           </Button>
 
           {aulaAssistida ? (

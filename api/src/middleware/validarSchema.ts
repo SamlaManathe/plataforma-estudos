@@ -27,3 +27,11 @@ export function validarBody(schema: ZodType) {
     return next();
   };
 }
+
+export function parseId(valor: unknown): number {
+  const id = Number(valor);
+  if (!Number.isInteger(id) || id <= 0) {
+    throw new Error("ID inválido.");
+  }
+  return id;
+}

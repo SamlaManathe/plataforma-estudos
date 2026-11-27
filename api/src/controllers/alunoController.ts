@@ -1,5 +1,9 @@
 import type { Request, Response } from "express";
-import type { CadastroAlunoDTO, AtualizarAlunoDTO } from "@plataforma-estudos/shared/aluno";
+import type {
+  CadastroAlunoDTO,
+  AtualizarAlunoDTO,
+} from "@plataforma-estudos/shared/aluno";
+import { parseId } from "../middleware/validarSchema.js";
 import * as service from "../services/alunoService.js";
 
 export async function getAll(req: Request, res: Response) {
@@ -8,7 +12,7 @@ export async function getAll(req: Request, res: Response) {
 }
 
 export async function getOne(req: Request, res: Response) {
-  const id: number = Number(req.params.id);
+  const id: number = parseId(req.params.id);
   const aluno = await service.getOne(id);
   if (!aluno) {
     return res.status(404).json({ mensagem: "Aluno não encontrado" });
@@ -23,14 +27,14 @@ export async function create(req: Request, res: Response) {
 }
 
 export async function update(req: Request, res: Response) {
-  const id: number = Number(req.params.id);
+  const id: number = parseId(req.params.id);
   const dados: AtualizarAlunoDTO = req.body;
   const aluno = await service.update(id, dados);
   return res.json(aluno);
 }
 
 export async function remove(req: Request, res: Response) {
-  const id: number = Number(req.params.id);
+  const id: number = parseId(req.params.id);
   await service.remove(id);
   return res.status(204).send();
 }

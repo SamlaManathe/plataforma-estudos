@@ -1,8 +1,10 @@
 import { prisma } from "../config/prisma.js";
-import type { AdminDTO, CadastroAdminDTO } from "@plataforma-estudos/shared/admin";
+import type { CadastroAdminDTO } from "@plataforma-estudos/shared/admin";
 
 export async function getAll() {
-  return await prisma.admin.findMany();
+  return await prisma.admin.findMany({
+    orderBy: [{ aprovado: "asc" }, { id: "asc" }],
+  });
 }
 
 export async function getOne(id: number) {
@@ -17,19 +19,34 @@ export async function getByTelephone(telefone: string) {
   return await prisma.admin.findUnique({ where: { telefone } });
 }
 
-export async function getByEmailAndPassword(email: string, senha: string) {
+export async function getByEmailAndPassword(email: string) {
   return await prisma.admin.findUnique({
     where: { email },
     omit: { senha: false },
   });
 }
 
-export async function create(data: CadastroAdminDTO) {
-  return await prisma.admin.create({ data });
+export async function create(data: CadastroAdminDTO & { aprovado?: boolean }) {
+  return await prisma.admin.create({
+    data: {
+      ...data,
+      aprovado: data.aprovado ?? false,
+    },
+  });
 }
 
-export async function update(id: number, data: Partial<CadastroAdminDTO>) {
+export async function update(
+  id: number,
+  data: Partial<CadastroAdminDTO> & { aprovado?: boolean },
+) {
   return await prisma.admin.update({ where: { id }, data });
+}
+
+export async function aprovar(id: number) {
+  return await prisma.admin.update({
+    where: { id },
+    data: { aprovado: true },
+  });
 }
 
 export async function remove(id: number) {

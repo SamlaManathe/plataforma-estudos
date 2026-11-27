@@ -28,6 +28,7 @@ model Admin {
   telefone     String   @unique
   email        String   @unique
   senha        String
+  aprovado     Boolean  @default(false)
   criadoEm     DateTime @default(now()) @map("criado_em")
   atualizadoEm DateTime @updatedAt @map("atualizado_em")
 

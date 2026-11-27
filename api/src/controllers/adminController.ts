@@ -1,5 +1,8 @@
 import type { Request, Response } from "express";
-import type { CadastroAdminDTO } from "@plataforma-estudos/shared/admin";
+import type {
+  AtualizarAdminDTO,
+  CadastroAdminDTO,
+} from "@plataforma-estudos/shared/admin";
 import * as service from "../services/adminService.js";
 
 export async function getAll(req: Request, res: Response) {
@@ -18,14 +21,26 @@ export async function getOne(req: Request, res: Response) {
 
 export async function create(req: Request, res: Response) {
   const dados: CadastroAdminDTO = req.body;
-  const admin = await service.create(dados);
+  const admin = await service.create(dados, false);
+  return res.status(201).json(admin);
+}
+
+export async function createAprovado(req: Request, res: Response) {
+  const dados: CadastroAdminDTO = req.body;
+  const admin = await service.create(dados, true);
   return res.status(201).json(admin);
 }
 
 export async function update(req: Request, res: Response) {
   const id: number = Number(req.params.id);
-  const dados: CadastroAdminDTO = req.body;
+  const dados: AtualizarAdminDTO = req.body;
   const admin = await service.update(id, dados);
+  return res.json(admin);
+}
+
+export async function aprovar(req: Request, res: Response) {
+  const id: number = Number(req.params.id);
+  const admin = await service.aprovar(id);
   return res.json(admin);
 }
 

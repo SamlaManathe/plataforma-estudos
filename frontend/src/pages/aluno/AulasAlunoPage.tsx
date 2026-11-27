@@ -2,16 +2,20 @@ import { useEffect, useState } from "react";
 import {
   Alert,
   Badge,
+  Box,
   Button,
   Container,
   Divider,
   Group,
   Loader,
   Paper,
+  Progress,
   Radio,
   Stack,
   Text,
+  ThemeIcon,
   Title,
+  useComputedColorScheme,
 } from "@mantine/core";
 import {
   IconAlertCircle,
@@ -19,6 +23,8 @@ import {
   IconArrowRight,
   IconCheck,
   IconFileDownload,
+  IconFileText,
+  IconHelpCircle,
   IconSend,
   IconX,
 } from "@tabler/icons-react";
@@ -30,7 +36,7 @@ import {
   getUrlPdfAula,
   marcarAulaAssistida,
   type AulaItem,
-} from "../../services/api";
+} from "../../services/api.ts";
 
 interface Props {
   alunoId: number;
@@ -63,12 +69,16 @@ export function AulasAlunoPage({
   const [erro, setErro] = useState("");
   const [sucesso, setSucesso] = useState("");
 
-  // Controle das questões em blocos (Anterior / Próxima)
   const [indiceAtual, setIndiceAtual] = useState(0);
   const [selecoes, setSelecoes] = useState<Record<number, number>>({});
   const [questionarioEnviado, setQuestionarioEnviado] = useState(false);
   const [aulaAssistida, setAulaAssistida] = useState(false);
   const [enviando, setEnviando] = useState(false);
+
+  const colorScheme = useComputedColorScheme("light", {
+    getInitialValueInEffect: true,
+  });
+  const isDark = colorScheme === "dark";
 
   async function carregarDadosAula() {
     try {
@@ -80,7 +90,6 @@ export function AulasAlunoPage({
       ]);
       setAula(dadosAula);
 
-      // Verifica no dashboard se o aluno já assistiu ou já respondeu essa aula
       for (const disc of dashboard.disciplinas) {
         const resumoAula = disc.aulas.find((a) => a.id === aulaId);
         if (resumoAula) {
@@ -107,8 +116,8 @@ export function AulasAlunoPage({
   if (carregando || !aula) {
     return (
       <Container py="xl">
-        <Group justify="center">
-          <Loader color="plataforma" />
+        <Group justify="center" py="xl">
+          <Loader color="plataforma.5" size="lg" />
         </Group>
       </Container>
     );
@@ -186,15 +195,19 @@ export function AulasAlunoPage({
     }
   }
 
-  // Regra: se a aula tem questionário, o botão de concluir só habilita após enviar o questionário
   const podeMarcarAssistida = !temQuestionario || questionarioEnviado;
+  const progressoQuestoes = temQuestionario
+    ? Math.round((Object.keys(selecoes).length / questoes.length) * 100)
+    : 100;
 
   return (
-    <Container size="md" py="xl">
+    <Container size="md" py="md">
       <Stack gap="lg">
-        <Group justify="space-between">
+        {/* Barra de Navegação e Conclusão */}
+        <Group justify="space-between" wrap="wrap">
           <Button
             variant="subtle"
+            color="plataforma.5"
             leftSection={<IconArrowLeft size={16} />}
             onClick={onVoltar}
           >
@@ -202,62 +215,74 @@ export function AulasAlunoPage({
           </Button>
 
           {aulaAssistida ? (
-            <Badge size="lg" color="teal" leftSection={<IconCheck size={14} />}>
-              Aula Concluída / Assistida
+            <Badge
+              size="lg"
+              color="teal"
+              variant="filled"
+              leftSection={<IconCheck size={14} />}
+            >
+              Aula Concluída
             </Badge>
           ) : (
             <Button
               color="teal"
               disabled={!podeMarcarAssistida || enviando}
               onClick={handleMarcarAssistida}
-              title={
-                !podeMarcarAssistida
-                  ? "Responda o questionário abaixo para liberar"
-                  : undefined
-              }
+              leftSection={<IconCheck size={16} />}
             >
               Marcar aula como assistida
             </Button>
           )}
         </Group>
 
-        <div>
-          <Text size="sm" c="dimmed" fw={700}>
-            {disciplinaNome}
-          </Text>
-          <Title order={2}>{aula.titulo}</Title>
-        </div>
+        {/* Cabeçalho da Aula */}
+        <Paper
+          radius="lg"
+          p="lg"
+          withBorder
+          style={{
+            borderLeft: "5px solid var(--mantine-color-plataforma-5)",
+          }}
+        >
+          <Stack gap={4}>
+            <Badge variant="light" color="plataforma.5" w="fit-content">
+              {disciplinaNome}
+            </Badge>
+            <Title order={2}>{aula.titulo}</Title>
+          </Stack>
+        </Paper>
 
         {!podeMarcarAssistida && (
-          <Alert color="blue" variant="light">
-            Esta aula possui questionário. Responda e envie todas as questões
-            abaixo para liberar o botão de concluir a aula.
+          <Alert color="blue" variant="light" radius="md">
+            Esta aula possui questionário obrigatório. Responda e envie todas as
+            questões abaixo para liberar a conclusão da aula.
           </Alert>
         )}
 
         {erro && (
-          <Alert icon={<IconAlertCircle size={18} />} color="red">
+          <Alert icon={<IconAlertCircle size={18} />} color="red" radius="md">
             {erro}
           </Alert>
         )}
 
         {sucesso && (
-          <Alert icon={<IconCheck size={18} />} color="teal">
+          <Alert icon={<IconCheck size={18} />} color="teal" radius="md">
             {sucesso}
           </Alert>
         )}
 
-        {/* Área do Vídeo e PDF (conforme protótipo) */}
-        <Paper withBorder p="md" radius="md">
+        {/* Vídeo e Material PDF */}
+        <Paper withBorder p="lg" radius="lg" shadow="xs">
           <Stack gap="md">
             {embedUrl ? (
-              <div
+              <Box
                 style={{
                   position: "relative",
                   paddingBottom: "56.25%",
                   height: 0,
                   overflow: "hidden",
-                  borderRadius: 8,
+                  borderRadius: 12,
+                  backgroundColor: "#000",
                 }}
               >
                 <iframe
@@ -273,48 +298,88 @@ export function AulasAlunoPage({
                   }}
                   allowFullScreen
                 />
-              </div>
+              </Box>
             ) : (
-              <Text c="dimmed" ta="center" py="md">
-                Nenhum vídeo vinculado a esta aula.
-              </Text>
+              <Paper
+                p="xl"
+                radius="md"
+                bg={isDark ? "dark.6" : "gray.0"}
+                ta="center"
+              >
+                <Text c="dimmed">Nenhum vídeo vinculado a esta aula.</Text>
+              </Paper>
             )}
 
             {aula.pdfNome && (
-              <Group justify="space-between" pt="xs">
-                <Text size="sm" fw={600}>
-                  Material complementar: {aula.pdfNome}
-                </Text>
-                <Button
-                  component="a"
-                  href={getUrlPdfAula(aula.id)}
-                  target="_blank"
-                  variant="light"
-                  leftSection={<IconFileDownload size={16} />}
-                >
-                  Abrir PDF da Aula
-                </Button>
-              </Group>
+              <Paper withBorder p="md" radius="md">
+                <Group justify="space-between" wrap="wrap">
+                  <Group gap="sm">
+                    <ThemeIcon
+                      size="lg"
+                      radius="md"
+                      variant="light"
+                      color="plataforma.5"
+                    >
+                      <IconFileText size={20} />
+                    </ThemeIcon>
+                    <div>
+                      <Text size="xs" c="dimmed" fw={700}>
+                        MATERIAL DE APOIO
+                      </Text>
+                      <Text size="sm" fw={600}>
+                        {aula.pdfNome}
+                      </Text>
+                    </div>
+                  </Group>
+                  <Button
+                    component="a"
+                    href={getUrlPdfAula(aula.id)}
+                    target="_blank"
+                    variant="light"
+                    color="plataforma.5"
+                    leftSection={<IconFileDownload size={16} />}
+                  >
+                    Abrir PDF
+                  </Button>
+                </Group>
+              </Paper>
             )}
           </Stack>
         </Paper>
 
-        {/* Questionário em Bloco (Anterior / Próxima + Envio Final) */}
+        {/* Questionário em Bloco */}
         {temQuestionario && questaoAtual && (
-          <Paper withBorder p="lg" radius="md">
+          <Paper withBorder p="lg" radius="lg" shadow="xs">
             <Stack gap="md">
               <Group justify="space-between">
-                <Title order={4}>
-                  Questão {indiceAtual + 1} de {questoes.length}
-                </Title>
-                <Badge variant="light" color="plataforma">
-                  {Object.keys(selecoes).length}/{questoes.length} marcadas
+                <Group gap="xs">
+                  <ThemeIcon
+                    variant="light"
+                    color="plataforma.5"
+                    radius="md"
+                    size="md"
+                  >
+                    <IconHelpCircle size={18} />
+                  </ThemeIcon>
+                  <Title order={4}>
+                    Questão {indiceAtual + 1} de {questoes.length}
+                  </Title>
+                </Group>
+                <Badge variant="light" color="plataforma.5">
+                  {Object.keys(selecoes).length}/{questoes.length} respondidas
                 </Badge>
               </Group>
 
+              <Progress
+                value={progressoQuestoes}
+                color="plataforma.5"
+                size="sm"
+                radius="xl"
+              />
+
               <Divider />
 
-              <Text fw={600} size="md">
+              <Text fw={700} size="lg">
                 {questaoAtual.numeroQuestao}. {questaoAtual.textoQuestao}
               </Text>
 
@@ -339,9 +404,14 @@ export function AulasAlunoPage({
                       <Paper
                         key={alt.id}
                         withBorder
-                        p="sm"
+                        p="md"
                         radius="md"
                         style={{
+                          cursor: questionarioEnviado ? "default" : "pointer",
+                          borderWidth:
+                            estaMarcada || (questionarioEnviado && alt.correta)
+                              ? 2
+                              : 1,
                           borderColor:
                             questionarioEnviado && alt.correta
                               ? "var(--mantine-color-teal-6)"
@@ -349,7 +419,17 @@ export function AulasAlunoPage({
                                   estaMarcada &&
                                   !alt.correta
                                 ? "var(--mantine-color-red-6)"
-                                : undefined,
+                                : estaMarcada
+                                  ? "var(--mantine-color-plataforma-5)"
+                                  : undefined,
+                        }}
+                        onClick={() => {
+                          if (!questionarioEnviado) {
+                            setSelecoes((prev) => ({
+                              ...prev,
+                              [questaoAtual.id]: alt.id,
+                            }));
+                          }
                         }}
                       >
                         <Group justify="space-between">
@@ -385,7 +465,6 @@ export function AulasAlunoPage({
 
               <Divider />
 
-              {/* Navegação Anterior / Próxima e Botão Final Enviar */}
               <Group justify="space-between">
                 <Button
                   variant="default"
@@ -398,6 +477,7 @@ export function AulasAlunoPage({
 
                 {indiceAtual < questoes.length - 1 ? (
                   <Button
+                    color="plataforma.5"
                     rightSection={<IconArrowRight size={16} />}
                     onClick={() =>
                       setIndiceAtual((i) =>

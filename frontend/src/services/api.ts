@@ -5,7 +5,7 @@ import type {
   CadastroAlunoDTO,
   AtualizarAlunoDTO,
 } from "@plataforma-estudos/shared/aluno";
-import type { Admin, CadastroAdminDTO } from "@plataforma-estudos/shared/admin";
+import type { Admin, CadastroAdminDTO, AtualizarAdminDTO } from "@plataforma-estudos/shared/admin";
 import type { DisciplinaDTO as DisciplinaDados } from "@plataforma-estudos/shared/disciplina";
 import type { AulaDTO } from "@plataforma-estudos/shared/aula";
 import type { QuestaoDTO } from "@plataforma-estudos/shared/questao";
@@ -262,3 +262,44 @@ export async function buscarRelatorioAdmin(): Promise<AlunoRelatorioAdmin[]> {
   );
   return resposta.data;
 }
+
+// Admins
+
+export async function listarAdmins(): Promise<Admin[]> {
+  const resposta = await api.get<Admin[]>("/admins");
+  return resposta.data;
+}
+
+export async function cadastrarAdminDireto(
+  dados: CadastroAdminDTO,
+): Promise<Admin> {
+  const resposta = await api.post<Admin>("/admins/direto", dados);
+  return resposta.data;
+}
+
+export async function atualizarAdmin(
+  id: number,
+  dados: AtualizarAdminDTO,
+): Promise<Admin> {
+  const resposta = await api.put<Admin>(`/admins/${id}`, dados);
+  return resposta.data;
+}
+
+export async function aprovarAdmin(id: number): Promise<Admin> {
+  const resposta = await api.patch<Admin>(`/admins/${id}/aprovar`);
+  return resposta.data;
+}
+
+export async function removerAdmin(id: number): Promise<void> {
+  await api.delete(`/admins/${id}`);
+}
+
+export type AulaResumoAluno = Awaited<
+  ReturnType<typeof buscarDashboardAluno>
+>["disciplinas"][number]["aulas"][number];
+
+export type DisciplinaDashboard = Awaited<
+  ReturnType<typeof buscarDashboardAluno>
+>["disciplinas"][number];
+
+export type DashboardAluno = Awaited<ReturnType<typeof buscarDashboardAluno>>;

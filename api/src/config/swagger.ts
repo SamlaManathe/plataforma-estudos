@@ -4,7 +4,11 @@ import {
   extendZodWithOpenApi,
 } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
-import { adminSchema, cadastroAdminSchema } from "@plataforma-estudos/shared/admin";
+import {
+  adminSchema,
+  cadastroAdminSchema,
+  atualizarAdminSchema,
+} from "@plataforma-estudos/shared/admin";
 import {
   alunoSchema,
   cadastroAlunoSchema,
@@ -26,11 +30,11 @@ const registry = new OpenAPIRegistry();
 
 // Schemas de resposta e erro padrão
 const idParamSchema = z.object({
-  id: z.string().openapi({ example: "1", description: "ID numérico do registro" }),
+  id: z.coerce.number().openapi({ example: 1, description: "ID numérico do registro" }),
 });
 
 const alunoIdParamSchema = z.object({
-  alunoId: z.string().openapi({ example: "1", description: "ID numérico do aluno" }),
+  alunoId: z.coerce.number().openapi({ example: 1, description: "ID numérico do aluno" }),
 });
 
 const erroValidacaoSchema = z.object({
@@ -160,23 +164,53 @@ registry.registerPath({
   responses: {
     200: {
       description: "Login realizado com sucesso (retorna dados sem senha)",
-      content: { "application/json": { schema: adminSchema.extend({ id: z.number() }) } },
+      content: {
+        "application/json": {
+          schema: adminSchema.extend({ id: z.number(), tipo: z.enum(["ADMIN", "ALUNO"]) }),
+        },
+      },
     },
     400: {
-      description: "Credenciais inválidas ou erro de validação",
+      description: "Erro de validação nos campos",
+      content: { "application/json": { schema: erroValidacaoSchema } },
+    },
+    401: {
+      description: "E-mail ou senha inválidos",
+      content: { "application/json": { schema: erroSimplesSchema } },
+    },
+    403: {
+      description: "Cadastro de administrador aguardando aprovação",
       content: { "application/json": { schema: erroSimplesSchema } },
     },
   },
 });
 
 // 2. CRUDs das tabelas
-registrarCrud(
-  "Admins",
-  "/admins",
-  cadastroAdminSchema,
-  cadastroAdminSchema,
-  adminSchema.extend({ id: z.number() })
-);
+const adminResponseSchema = adminSchema.extend({
+  id: z.number(),
+  aprovado: z.boolean(),
+});
+
+registrarCrud("Admins", "/admins", cadastroAdminSchema, atualizarAdminSchema, adminResponseSchema);
+
+registry.registerPath({
+  method: "patch",
+  path: "/admins/{id}/aprovar",
+  tags: ["Admins"],
+  summary: "Aprovar cadastro de administrador pendente",
+  request: { params: idParamSchema },
+  responses: {
+    200: {
+      description: "Administrador aprovado com sucesso",
+      content: { "application/json": { schema: adminResponseSchema } },
+    },
+    404: {
+      description: "Administrador não encontrado",
+      content: { "application/json": { schema: erroSimplesSchema } },
+    },
+  },
+});
+
 registrarCrud(
   "Alunos",
   "/alunos",
@@ -184,6 +218,7 @@ registrarCrud(
   atualizarAlunoSchema,
   alunoSchema.extend({ id: z.number() })
 );
+
 registrarCrud(
   "Disciplinas",
   "/disciplinas",
@@ -191,29 +226,15 @@ registrarCrud(
   disciplinaSchema,
   disciplinaSchema.extend({ id: z.number() })
 );
+
 registrarCrud(
   "Aulas",
   "/aulas",
   aulaSchema,
   aulaSchema,
-  aulaSchema.extend({ id: z.number() })
-);
-registrarCrud(
-  "Questões",
-  "/questoes",
-  questaoSchema,
-  questaoSchema,
-  questaoSchema.extend({ id: z.number() })
-);
-registrarCrud(
-  "Alternativas",
-  "/alternativas",
-  alternativaSchema,
-  alternativaSchema,
-  alternativaSchema.extend({ id: z.number() })
+  aulaSchema.extend({ id: z.number(), pdfNome: z.string().nullable().optional() })
 );
 
-// Rota extra de PDF da aula
 registry.registerPath({
   method: "get",
   path: "/aulas/{id}/pdf",
@@ -222,11 +243,27 @@ registry.registerPath({
   request: { params: idParamSchema },
   responses: {
     200: { description: "Arquivo PDF da aula" },
-    404: { description: "Aula ou PDF não encontrado" },
+    404: { description: "Aula ou PDF não encontrado", content: { "application/json": { schema: erroSimplesSchema } } },
   },
 });
 
-// 3. Rotas de Progresso do Aluno e Relatório do Admin
+registrarCrud(
+  "Questões",
+  "/questoes",
+  questaoSchema,
+  questaoSchema,
+  questaoSchema.extend({ id: z.number() })
+);
+
+registrarCrud(
+  "Alternativas",
+  "/alternativas",
+  alternativaSchema,
+  alternativaSchema,
+  alternativaSchema.extend({ id: z.number() })
+);
+
+// 3. Rotas de Progresso e Relatório
 registry.registerPath({
   method: "post",
   path: "/progresso/responder-aula",
@@ -237,7 +274,7 @@ registry.registerPath({
   },
   responses: {
     201: { description: "Respostas salvas com sucesso" },
-    400: { description: "Erro de validação ou questionário já respondido" },
+    400: { description: "Erro de validação ou questionário já respondido", content: { "application/json": { schema: erroSimplesSchema } } },
   },
 });
 
@@ -251,7 +288,7 @@ registry.registerPath({
   },
   responses: {
     201: { description: "Aula marcada como assistida" },
-    400: { description: "Erro de validação ou questionário pendente" },
+    400: { description: "Erro de validação ou questionário pendente", content: { "application/json": { schema: erroSimplesSchema } } },
   },
 });
 
@@ -285,6 +322,6 @@ export const swaggerDocument = generator.generateDocument({
     title: "API Plataforma de Estudos",
     version: "1.0.0",
     description:
-      "Documentação da API de Disciplinas, Aulas, Questões, Alternativas, Alunos, Admins e Progresso",
+      "Documentação completa da API de Disciplinas, Aulas, Questões, Alternativas, Alunos, Admins e Progresso",
   },
 });

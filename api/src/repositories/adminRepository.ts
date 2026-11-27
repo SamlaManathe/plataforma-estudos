@@ -42,10 +42,10 @@ export async function update(
   return await prisma.admin.update({ where: { id }, data });
 }
 
-export async function aprovar(id: number) {
+export async function alterarStatusAprovacao(id: number, aprovado: boolean) {
   return await prisma.admin.update({
     where: { id },
-    data: { aprovado: true },
+    data: { aprovado },
   });
 }
 

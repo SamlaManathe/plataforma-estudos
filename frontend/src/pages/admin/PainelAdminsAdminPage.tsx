@@ -23,20 +23,19 @@ import {
   IconPlus,
   IconSearch,
   IconTrash,
-  IconUserCheck,
   IconX,
 } from "@tabler/icons-react";
 import {
   atualizarAdminSchema,
   cadastroAdminSchema,
-  type Admin,
 } from "@plataforma-estudos/shared/admin";
 import {
-  aprovarAdmin,
+  alterarStatusAdmin,
   atualizarAdmin,
   cadastrarAdminDireto,
   listarAdmins,
   removerAdmin,
+  type Admin,
 } from "../../services/api.ts";
 
 interface Props {
@@ -45,392 +44,350 @@ interface Props {
 
 export function PainelAdminsAdminPage({ adminLogadoId }: Props) {
   const [admins, setAdmins] = useState<Admin[]>([]);
-  const [busca, setBusca] = useState("");
   const [carregando, setCarregando] = useState(true);
-  const [erro, setErro] = useState("");
-  const [sucesso, setSucesso] = useState("");
+  const [busca, setBusca] = useState("");
+  const [erroGeral, setErroGeral] = useState("");
 
   // Modal Criar / Editar Admin
   const [modalAberto, setModalAberto] = useState(false);
-  const [editando, setEditando] = useState<Admin | null>(null);
+  const [adminEditando, setAdminEditando] = useState<Admin | null>(null);
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [erroForm, setErroForm] = useState("");
+  const [errosCampos, setErrosCampos] = useState<Record<string, string>>({});
+  const [erroModal, setErroModal] = useState("");
   const [salvando, setSalvando] = useState(false);
 
-  async function carregar() {
+  async function carregarAdmins() {
     try {
       setCarregando(true);
-      setErro("");
-      const dados = await listarAdmins();
-      setAdmins(dados);
+      setErroGeral("");
+      const lista = await listarAdmins();
+      setAdmins(lista);
     } catch {
-      setErro("Erro ao carregar os administradores.");
+      setErroGeral("Erro ao carregar a lista de administradores.");
     } finally {
       setCarregando(false);
     }
   }
 
   useEffect(() => {
-    carregar();
+    carregarAdmins();
   }, []);
 
-  function abrirCriar() {
-    setEditando(null);
+  function abrirModalNovo() {
+    setAdminEditando(null);
     setNome("");
     setTelefone("");
     setEmail("");
     setSenha("");
-    setErroForm("");
+    setErrosCampos({});
+    setErroModal("");
     setModalAberto(true);
   }
 
-  function abrirEditar(item: Admin) {
-    setEditando(item);
-    setNome(item.nome);
-    setTelefone(item.telefone);
-    setEmail(item.email);
+  function abrirModalEditar(admin: Admin) {
+    setAdminEditando(admin);
+    setNome(admin.nome);
+    setTelefone(admin.telefone);
+    setEmail(admin.email);
     setSenha("");
-    setErroForm("");
+    setErrosCampos({});
+    setErroModal("");
     setModalAberto(true);
   }
 
-  async function handleSalvar() {
-    setErroForm("");
-    setSucesso("");
+  async function handleSalvarAdmin() {
+    setErrosCampos({});
+    setErroModal("");
 
-    if (editando) {
-      const validacao = atualizarAdminSchema.safeParse({
-        nome: nome.trim(),
-        telefone: telefone.trim(),
-        email: email.trim(),
-        senha: senha === "" ? undefined : senha,
-      });
+    const payload = { nome, telefone, email, senha };
+    const schema = adminEditando ? atualizarAdminSchema : cadastroAdminSchema;
+    const validacao = schema.safeParse(payload);
 
-      if (!validacao.success) {
-        setErroForm(
-          validacao.error.issues[0]?.message || "Dados inválidos.",
-        );
-        return;
+    if (!validacao.success) {
+      const mapaErros: Record<string, string> = {};
+      for (const issue of validacao.error.issues) {
+        const campo = String(issue.path[0] || "");
+        if (campo && !mapaErros[campo]) {
+          mapaErros[campo] = issue.message;
+        }
       }
-
-      try {
-        setSalvando(true);
-        await atualizarAdmin(editando.id, validacao.data);
-        setSucesso("Administrador atualizado com sucesso!");
-        setModalAberto(false);
-        await carregar();
-      } catch (err: any) {
-        setErroForm(
-          err?.response?.data?.mensagem || "Erro ao atualizar administrador.",
-        );
-      } finally {
-        setSalvando(false);
-      }
-    } else {
-      const validacao = cadastroAdminSchema.safeParse({
-        nome: nome.trim(),
-        telefone: telefone.trim(),
-        email: email.trim(),
-        senha,
-      });
-
-      if (!validacao.success) {
-        setErroForm(
-          validacao.error.issues[0]?.message || "Dados inválidos.",
-        );
-        return;
-      }
-
-      try {
-        setSalvando(true);
-        await cadastrarAdminDireto(validacao.data);
-        setSucesso("Novo administrador cadastrado e aprovado!");
-        setModalAberto(false);
-        await carregar();
-      } catch (err: any) {
-        setErroForm(
-          err?.response?.data?.mensagem || "Erro ao cadastrar administrador.",
-        );
-      } finally {
-        setSalvando(false);
-      }
-    }
-  }
-
-  async function handleAprovar(item: Admin) {
-    try {
-      setErro("");
-      setSucesso("");
-      await aprovarAdmin(item.id);
-      setSucesso(`Administrador "${item.nome}" aprovado com sucesso!`);
-      await carregar();
-    } catch (err: any) {
-      setErro(
-        err?.response?.data?.mensagem || "Não foi possível aprovar o admin.",
-      );
-    }
-  }
-
-  async function handleRemover(item: Admin) {
-    if (item.id === adminLogadoId) {
-      setErro("Você não pode excluir a sua própria conta enquanto está logado.");
-      return;
-    }
-
-    const acao = item.aprovado ? "excluir" : "recusar e remover";
-    if (
-      !window.confirm(
-        `Tem certeza que deseja ${acao} o administrador "${item.nome}"?`,
-      )
-    ) {
+      setErrosCampos(mapaErros);
       return;
     }
 
     try {
-      setErro("");
-      setSucesso("");
-      await removerAdmin(item.id);
-      setSucesso("Administrador removido com sucesso!");
-      await carregar();
+      setSalvando(true);
+      if (adminEditando) {
+        await atualizarAdmin(adminEditando.id, validacao.data);
+      } else {
+        await cadastrarAdminDireto(validacao.data as any);
+      }
+      setModalAberto(false);
+      await carregarAdmins();
     } catch (err: any) {
-      setErro(
-        err?.response?.data?.mensagem || "Não foi possível remover o admin.",
+      setErroModal(
+        err?.response?.data?.mensagem ||
+          "Erro ao salvar os dados do administrador.",
+      );
+    } finally {
+      setSalvando(false);
+    }
+  }
+
+  async function handleAlterarStatus(admin: Admin, aprovado: boolean) {
+    try {
+      setErroGeral("");
+      await alterarStatusAdmin(admin.id, aprovado, adminLogadoId);
+      await carregarAdmins();
+    } catch (err: any) {
+      setErroGeral(
+        err?.response?.data?.mensagem ||
+          "Não foi possível alterar o status do administrador.",
       );
     }
   }
 
-  const filtrados = admins.filter(
+  async function handleRemoverAdmin(admin: Admin) {
+    const confirmou = window.confirm(
+      `Tem certeza que deseja excluir o administrador "${admin.nome}"?`,
+    );
+    if (!confirmou) return;
+
+    try {
+      await removerAdmin(admin.id);
+      await carregarAdmins();
+    } catch (err: any) {
+      setErroGeral(
+        err?.response?.data?.mensagem ||
+          "Não foi possível remover o administrador.",
+      );
+    }
+  }
+
+  const adminsFiltrados = admins.filter(
     (a) =>
       a.nome.toLowerCase().includes(busca.toLowerCase()) ||
-      a.email.toLowerCase().includes(busca.toLowerCase()) ||
-      a.telefone.includes(busca),
+      a.email.toLowerCase().includes(busca.toLowerCase()),
   );
 
-  const pendentes = filtrados.filter((a) => !a.aprovado);
-  const aprovados = filtrados.filter((a) => a.aprovado);
-
   return (
-    <Container size="lg" py="md">
-      <Stack gap="md">
+    <Container size="lg" py="xl">
+      <Stack gap="lg">
         <Group justify="space-between">
           <div>
-            <Title order={2}>Gerenciar Administradores</Title>
-            <Text size="sm" c="dimmed">
-              Aprove solicitações pendentes e gerencie os administradores da
-              plataforma.
+            <Title order={2}>Administradores</Title>
+            <Text c="dimmed" size="sm">
+              Aprove solicitações pendentes, ative ou desative acessos e
+              gerencie contas de administradores
             </Text>
           </div>
-          <Button
-            color="plataforma.5"
-            leftSection={<IconPlus size={16} />}
-            onClick={abrirCriar}
-          >
+          <Button leftSection={<IconPlus size={16} />} onClick={abrirModalNovo}>
             Novo Admin
           </Button>
         </Group>
 
-        {erro && (
+        {erroGeral && (
           <Alert icon={<IconAlertCircle size={18} />} color="red">
-            {erro}
-          </Alert>
-        )}
-
-        {sucesso && (
-          <Alert icon={<IconCheck size={18} />} color="teal">
-            {sucesso}
+            {erroGeral}
           </Alert>
         )}
 
         <TextInput
-          placeholder="Buscar administrador por nome, e-mail ou telefone..."
+          placeholder="Buscar administrador por nome ou e-mail..."
           leftSection={<IconSearch size={16} />}
           value={busca}
           onChange={(e) => setBusca(e.currentTarget.value)}
         />
 
-        {/* Solicitações Pendentes de Aprovação */}
-        {pendentes.length > 0 && (
-          <Paper withBorder radius="md" p="md">
-            <Stack gap="sm">
-              <Group justify="space-between">
-                <Title order={4}>Solicitações Aguardando Aprovação</Title>
-                <Badge color="yellow" variant="filled">
-                  {pendentes.length} pendente(s)
-                </Badge>
-              </Group>
-
-              <Table striped highlightOnHover>
-                <Table.Thead>
-                  <Table.Tr>
-                    <Table.Th>Nome</Table.Th>
-                    <Table.Th>E-mail</Table.Th>
-                    <Table.Th>Telefone</Table.Th>
-                    <Table.Th style={{ textAlign: "right" }}>Ações</Table.Th>
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
-                  {pendentes.map((item) => (
-                    <Table.Tr key={item.id}>
-                      <Table.Td fw={600}>{item.nome}</Table.Td>
-                      <Table.Td>{item.email}</Table.Td>
-                      <Table.Td>{item.telefone}</Table.Td>
-                      <Table.Td>
-                        <Group gap="xs" justify="flex-end">
-                          <Button
-                            size="xs"
-                            color="teal"
-                            leftSection={<IconUserCheck size={14} />}
-                            onClick={() => handleAprovar(item)}
-                          >
-                            Aprovar
-                          </Button>
-                          <Button
-                            size="xs"
-                            color="red"
-                            variant="light"
-                            leftSection={<IconX size={14} />}
-                            onClick={() => handleRemover(item)}
-                          >
-                            Recusar
-                          </Button>
-                        </Group>
-                      </Table.Td>
-                    </Table.Tr>
-                  ))}
-                </Table.Tbody>
-              </Table>
-            </Stack>
-          </Paper>
-        )}
-
-        {/* Administradores Ativos */}
-        <Paper withBorder radius="md" p="md">
-          {carregando ? (
-            <Group justify="center" py="lg">
-              <Loader color="plataforma.5" />
-            </Group>
-          ) : aprovados.length === 0 ? (
-            <Text c="dimmed" ta="center" py="lg">
-              Nenhum administrador ativo encontrado.
-            </Text>
-          ) : (
-            <Table striped highlightOnHover>
+        {carregando ? (
+          <Group justify="center" py="xl">
+            <Loader color="plataforma" />
+          </Group>
+        ) : (
+          <Paper withBorder radius="md" p="xs">
+            <Table striped highlightOnHover className="tabela">
               <Table.Thead>
                 <Table.Tr>
                   <Table.Th>Nome</Table.Th>
-                  <Table.Th>E-mail</Table.Th>
-                  <Table.Th>Telefone</Table.Th>
+                  <Table.Th className="esconde-no-celular">E-mail</Table.Th>
+                  <Table.Th className="esconde-no-celular">Telefone</Table.Th>
                   <Table.Th>Status</Table.Th>
-                  <Table.Th style={{ textAlign: "right" }}>Ações</Table.Th>
+                  <Table.Th ta="right">Ações</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
-                {aprovados.map((item) => (
-                  <Table.Tr key={item.id}>
-                    <Table.Td fw={500}>
-                      {item.nome}{" "}
-                      {item.id === adminLogadoId && (
-                        <Badge size="xs" color="plataforma.5" ml={4}>
-                          Você
-                        </Badge>
-                      )}
-                    </Table.Td>
-                    <Table.Td>{item.email}</Table.Td>
-                    <Table.Td>{item.telefone}</Table.Td>
-                    <Table.Td>
-                      <Badge color="teal" variant="light">
-                        Ativo
-                      </Badge>
-                    </Table.Td>
-                    <Table.Td>
-                      <Group gap="xs" justify="flex-end">
-                        <ActionIcon
-                          variant="light"
-                          color="blue"
-                          onClick={() => abrirEditar(item)}
-                          title="Editar"
-                        >
-                          <IconEdit size={16} />
-                        </ActionIcon>
-                        <ActionIcon
-                          variant="light"
-                          color="red"
-                          disabled={item.id === adminLogadoId}
-                          onClick={() => handleRemover(item)}
-                          title="Excluir"
-                        >
-                          <IconTrash size={16} />
-                        </ActionIcon>
-                      </Group>
+                {adminsFiltrados.length === 0 ? (
+                  <Table.Tr>
+                    <Table.Td colSpan={5}>
+                      <Text ta="center" c="dimmed" py="md">
+                        Nenhum administrador encontrado.
+                      </Text>
                     </Table.Td>
                   </Table.Tr>
-                ))}
+                ) : (
+                  adminsFiltrados.map((admin) => {
+                    const ehPropriaConta = admin.id === adminLogadoId;
+                    return (
+                      <Table.Tr key={admin.id}>
+                        <Table.Td fw={600}>
+                          {admin.nome}{" "}
+                          {ehPropriaConta && (
+                            <Badge size="xs" variant="outline" ml={4}>
+                              Você
+                            </Badge>
+                          )}
+                        </Table.Td>
+                        <Table.Td className="esconde-no-celular">
+                          {admin.email}
+                        </Table.Td>
+                        <Table.Td className="esconde-no-celular">
+                          {admin.telefone}
+                        </Table.Td>
+                        <Table.Td>
+                          {admin.aprovado ? (
+                            <Badge
+                              color="teal"
+                              variant="light"
+                              leftSection={<IconCheck size={12} />}
+                            >
+                              Ativo
+                            </Badge>
+                          ) : (
+                            <Badge color="yellow" variant="light">
+                              Pendente
+                            </Badge>
+                          )}
+                        </Table.Td>
+                        <Table.Td>
+                          <Group gap="xs" justify="flex-end" wrap="nowrap">
+                            {!admin.aprovado ? (
+                              <Button
+                                size="xs"
+                                color="teal"
+                                variant="light"
+                                leftSection={<IconCheck size={14} />}
+                                onClick={() => handleAlterarStatus(admin, true)}
+                              >
+                                Aprovar
+                              </Button>
+                            ) : (
+                              <Button
+                                size="xs"
+                                color="orange"
+                                variant="light"
+                                leftSection={<IconX size={14} />}
+                                disabled={ehPropriaConta}
+                                title={
+                                  ehPropriaConta
+                                    ? "Você não pode desativar sua própria conta"
+                                    : "Desativar acesso deste administrador"
+                                }
+                                onClick={() =>
+                                  handleAlterarStatus(admin, false)
+                                }
+                              >
+                                Desativar
+                              </Button>
+                            )}
+
+                            <ActionIcon
+                              variant="light"
+                              color="plataforma"
+                              title="Editar administrador"
+                              onClick={() => abrirModalEditar(admin)}
+                            >
+                              <IconEdit size={16} />
+                            </ActionIcon>
+
+                            <ActionIcon
+                              variant="light"
+                              color="red"
+                              disabled={ehPropriaConta}
+                              title={
+                                ehPropriaConta
+                                  ? "Você não pode excluir sua própria conta"
+                                  : "Remover administrador"
+                              }
+                              onClick={() => handleRemoverAdmin(admin)}
+                            >
+                              <IconTrash size={16} />
+                            </ActionIcon>
+                          </Group>
+                        </Table.Td>
+                      </Table.Tr>
+                    );
+                  })
+                )}
               </Table.Tbody>
             </Table>
-          )}
-        </Paper>
+          </Paper>
+        )}
       </Stack>
 
       <Modal
         opened={modalAberto}
         onClose={() => setModalAberto(false)}
-        title={editando ? "Editar Administrador" : "Novo Administrador"}
+        title={
+          adminEditando
+            ? "Editar Administrador"
+            : "Cadastrar Novo Administrador"
+        }
       >
         <Stack gap="md">
-          {erroForm && (
-            <Alert icon={<IconAlertCircle size={16} />} color="red">
-              {erroForm}
+          {erroModal && (
+            <Alert icon={<IconAlertCircle size={18} />} color="red">
+              {erroModal}
             </Alert>
           )}
 
           <TextInput
-            label="Nome"
-            placeholder="Nome completo"
-            required
+            label="Nome completo"
+            placeholder="Ex: Maria Oliveira"
             value={nome}
             onChange={(e) => setNome(e.currentTarget.value)}
+            error={errosCampos.nome}
+            required
           />
 
           <TextInput
             label="Telefone"
-            placeholder="83999998888"
-            required
+            placeholder="Ex: 83999998888"
             value={telefone}
             onChange={(e) => setTelefone(e.currentTarget.value)}
+            error={errosCampos.telefone}
+            required
           />
 
           <TextInput
             label="E-mail"
             placeholder="admin@exemplo.com"
-            required
             value={email}
             onChange={(e) => setEmail(e.currentTarget.value)}
+            error={errosCampos.email}
+            required
           />
 
           <PasswordInput
             label={
-              editando
-                ? "Nova Senha (deixe em branco para manter a atual)"
+              adminEditando
+                ? "Nova senha (opcional — deixe em branco para manter)"
                 : "Senha"
             }
             placeholder="Mínimo 8 caracteres"
-            required={!editando}
             value={senha}
             onChange={(e) => setSenha(e.currentTarget.value)}
+            error={errosCampos.senha}
+            required={!adminEditando}
           />
 
-          <Group justify="flex-end">
+          <Group justify="flex-end" mt="md">
             <Button variant="default" onClick={() => setModalAberto(false)}>
               Cancelar
             </Button>
-            <Button
-              color="plataforma.5"
-              loading={salvando}
-              onClick={handleSalvar}
-            >
+            <Button loading={salvando} onClick={handleSalvarAdmin}>
               Salvar
             </Button>
           </Group>

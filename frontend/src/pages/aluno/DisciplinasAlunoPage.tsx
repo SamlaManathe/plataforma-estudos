@@ -24,7 +24,6 @@ import {
   IconAlertCircle,
   IconBook2,
   IconCheck,
-  IconChevronRight,
   IconCircleCheck,
   IconClock,
   IconPlayerPlay,
@@ -357,10 +356,6 @@ export function DisciplinasAlunoPage({
                       <Text size="xs" c="dimmed">
                         Clique para ver o conteúdo
                       </Text>
-                      <IconChevronRight
-                        size={16}
-                        color="var(--mantine-color-plataforma-5)"
-                      />
                     </Group>
                   </Card>
                 );
@@ -464,7 +459,9 @@ export function DisciplinasAlunoPage({
                                 >
                                   {aula.respondidas > 0
                                     ? `${aula.porcentagemAcertos}% de acertos (${aula.acertos}/${aula.totalQuestoes})`
-                                    : `${aula.totalQuestoes} questão(ões)`}
+                                    : aula.totalQuestoes < 2
+                                      ? `${aula.totalQuestoes} questão`
+                                      : `${aula.totalQuestoes} questões`}
                                 </Badge>
                               )}
                             </Group>

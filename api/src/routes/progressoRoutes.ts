@@ -19,6 +19,10 @@ router.post(
   controller.assistirAula,
 );
 router.get("/progresso/aluno/:alunoId", controller.dashboardAluno);
+router.get(
+  "/progresso/aluno/:alunoId/aula/:aulaId",
+  controller.respostasAlunoNaAula,
+);
 router.get("/progresso/admin/relatorio", controller.relatorioAdmin);
 
 export default router;

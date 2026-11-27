@@ -44,9 +44,7 @@ export async function enviarRespostasAula(dados: EnviarRespostasAulaDTO) {
       (q: QuestaoComAlternativas) => q.id === resp.questaoId,
     );
     if (!questao) {
-      throw new Error(
-        `A questão ${resp.questaoId} não pertence a esta aula.`,
-      );
+      throw new Error(`A questão ${resp.questaoId} não pertence a esta aula.`);
     }
 
     const alternativa = questao.alternativas.find(
@@ -94,6 +92,15 @@ export async function marcarAulaAssistida(dados: MarcarAulaAssistidaDTO) {
   }
 
   return await repository.upsertAulaAssistida(dados.alunoId, dados.aulaId);
+}
+
+export async function getRespostasAlunoNaAula(alunoId: number, aulaId: number) {
+  const aluno = await alunoRepository.getOne(alunoId);
+  if (!aluno) {
+    throw new Error("Aluno não encontrado.");
+  }
+
+  return await repository.getRespostasAlunoNaAula(alunoId, aulaId);
 }
 
 export async function getDashboardAluno(alunoId: number) {

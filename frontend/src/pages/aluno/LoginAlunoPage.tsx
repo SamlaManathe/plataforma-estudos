@@ -55,7 +55,7 @@ export function LoginAlunoPage({
 
     try {
       const usuario = await login(validacaoDados.data);
-      
+
       if (usuario.tipo !== "aluno") {
         setErro("Esta conta é de administrador. Use o login de Admin.");
         setCarregando(false);
@@ -83,7 +83,7 @@ export function LoginAlunoPage({
   }
 
   return (
-    <Box w="100%" maw={380}>
+    <Box w="100%">
       <Title order={1} fz={32}>
         Entrar como Aluno
       </Title>
@@ -92,12 +92,13 @@ export function LoginAlunoPage({
       </Text>
 
       <form
+        style={{ width: "100%" }}
         onSubmit={(evento) => {
           evento.preventDefault();
           entrar();
         }}
       >
-        <Stack>
+        <Stack w="100%">
           {erro && <Alert color="red">{erro}</Alert>}
 
           <TextInput
@@ -128,7 +129,11 @@ export function LoginAlunoPage({
 
           <Text size="sm" ta="center" c="dimmed">
             É professor ou administrador?{" "}
-            <Anchor component="button" type="button" onClick={onIrParaLoginAdmin}>
+            <Anchor
+              component="button"
+              type="button"
+              onClick={onIrParaLoginAdmin}
+            >
               Entrar como Admin
             </Anchor>
           </Text>

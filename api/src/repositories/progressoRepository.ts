@@ -114,3 +114,10 @@ export async function getRelatorioTodosAlunos() {
     },
   });
 }
+
+export async function resetarProgressoAula(aulaId: number) {
+  return await prisma.progressoAula.updateMany({
+    where: { aulaId },
+    data: { assistida: false },
+  });
+}

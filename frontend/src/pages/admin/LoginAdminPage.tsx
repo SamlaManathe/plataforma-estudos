@@ -83,7 +83,7 @@ export function LoginAdminPage({
   }
 
   return (
-    <Box w="100%" maw={380}>
+    <Box w="100%">
       <Title order={1} fz={32}>
         Área Administrativa
       </Title>
@@ -92,12 +92,13 @@ export function LoginAdminPage({
       </Text>
 
       <form
+        style={{ width: "100%" }}
         onSubmit={(evento) => {
           evento.preventDefault();
           entrar();
         }}
       >
-        <Stack>
+        <Stack w="100%">
           {erro && <Alert color="red">{erro}</Alert>}
 
           <TextInput
@@ -128,7 +129,11 @@ export function LoginAdminPage({
 
           <Text size="sm" ta="center" c="dimmed">
             É aluno?{" "}
-            <Anchor component="button" type="button" onClick={onIrParaLoginAluno}>
+            <Anchor
+              component="button"
+              type="button"
+              onClick={onIrParaLoginAluno}
+            >
               Voltar para Login de Aluno
             </Anchor>
           </Text>

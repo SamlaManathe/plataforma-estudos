@@ -5,7 +5,12 @@ import type {
   CadastroAlunoDTO,
   AtualizarAlunoDTO,
 } from "@plataforma-estudos/shared/aluno";
-import type { Admin, CadastroAdminDTO, AtualizarAdminDTO } from "@plataforma-estudos/shared/admin";
+import type {
+  Admin,
+  CadastroAdminDTO,
+  AtualizarAdminDTO,
+} from "@plataforma-estudos/shared/admin";
+export type { Admin };
 import type { DisciplinaDTO as DisciplinaDados } from "@plataforma-estudos/shared/disciplina";
 import type { AulaDTO } from "@plataforma-estudos/shared/aula";
 import type { QuestaoDTO } from "@plataforma-estudos/shared/questao";
@@ -237,11 +242,30 @@ export async function removerAlternativa(id: number): Promise<void> {
 }
 
 // --- Progresso do Aluno e Relatório Admin ---
+export type RespostaAlunoAulaItem = {
+  id: number;
+  alunoId: number;
+  questaoId: number;
+  alternativaId: number;
+  acertou: boolean;
+  respondidoEm: string;
+};
+
 export async function buscarDashboardAluno(
   alunoId: number,
 ): Promise<DashboardAlunoResponse> {
   const resposta = await api.get<DashboardAlunoResponse>(
     `/progresso/aluno/${alunoId}`,
+  );
+  return resposta.data;
+}
+
+export async function buscarRespostasAlunoNaAula(
+  alunoId: number,
+  aulaId: number,
+): Promise<RespostaAlunoAulaItem[]> {
+  const resposta = await api.get<RespostaAlunoAulaItem[]>(
+    `/progresso/aluno/${alunoId}/aula/${aulaId}`,
   );
   return resposta.data;
 }
@@ -285,8 +309,15 @@ export async function atualizarAdmin(
   return resposta.data;
 }
 
-export async function aprovarAdmin(id: number): Promise<Admin> {
-  const resposta = await api.patch<Admin>(`/admins/${id}/aprovar`);
+export async function alterarStatusAdmin(
+  id: number,
+  aprovado: boolean,
+  adminLogadoId: number,
+): Promise<Admin> {
+  const resposta = await api.patch<Admin>(`/admins/${id}/aprovar`, {
+    aprovado,
+    adminLogadoId,
+  });
   return resposta.data;
 }
 

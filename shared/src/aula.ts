@@ -22,6 +22,10 @@ export const aulaSchema = z.object({
     .int("O ID da disciplina deve ser um número inteiro")
     .positive("O ID da disciplina deve ser maior que zero")
     .meta({ example: 1 }),
-})
+
+  removerPdf: z
+    .preprocess((val) => val === true || val === "true", z.boolean().optional())
+    .optional(),
+});
 
 export type AulaDTO = z.infer<typeof aulaSchema>;

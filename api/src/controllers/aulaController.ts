@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import type { AulaDTO } from "@plataforma-estudos/shared/aula";
+import { parseId } from "../middleware/validarSchema.js";
 import * as service from "../services/aulaService.js";
 
 export async function getAll(req: Request, res: Response) {
@@ -8,7 +9,7 @@ export async function getAll(req: Request, res: Response) {
 }
 
 export async function getOne(req: Request, res: Response) {
-  const id = Number(req.params.id);
+  const id = parseId(req.params.id);
   const aula = await service.getOne(id);
   if (!aula) {
     return res.status(404).json({ mensagem: "Aula não encontrada" });
@@ -17,7 +18,7 @@ export async function getOne(req: Request, res: Response) {
 }
 
 export async function getPdf(req: Request, res: Response) {
-  const id = Number(req.params.id);
+  const id = parseId(req.params.id);
   const aula = await service.getPdf(id);
   if (!aula || !aula.pdfArquivo) {
     return res
@@ -49,8 +50,10 @@ export async function create(req: Request, res: Response) {
 }
 
 export async function update(req: Request, res: Response) {
-  const id = Number(req.params.id);
+  const id = parseId(req.params.id);
   const dados: AulaDTO = req.body;
+  const removerPdf =
+    req.body.removerPdf === "true" || req.body.removerPdf === true;
 
   const pdf = req.file
     ? {
@@ -59,12 +62,12 @@ export async function update(req: Request, res: Response) {
       }
     : undefined;
 
-  const aula = await service.update(id, dados, pdf);
+  const aula = await service.update(id, dados, pdf, removerPdf);
   return res.json(aula);
 }
 
 export async function remove(req: Request, res: Response) {
-  const id = Number(req.params.id);
+  const id = parseId(req.params.id);
   await service.remove(id);
   return res.status(204).send();
 }

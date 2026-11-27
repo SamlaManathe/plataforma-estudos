@@ -31,6 +31,7 @@ import {
   IconSearch,
   IconTrash,
   IconUpload,
+  IconX,
 } from "@tabler/icons-react";
 import { aulaSchema } from "@plataforma-estudos/shared/aula";
 import { questaoSchema } from "@plataforma-estudos/shared/questao";
@@ -73,6 +74,7 @@ export function AulasAdminPage() {
   const [disciplinaId, setDisciplinaId] = useState<string | null>(null);
   const [videoUrl, setVideoUrl] = useState("");
   const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const [removerPdf, setRemoverPdf] = useState(false);
   const [erroAulaForm, setErroAulaForm] = useState("");
   const [salvandoAula, setSalvandoAula] = useState(false);
 
@@ -127,6 +129,7 @@ export function AulasAdminPage() {
     setDisciplinaId(disciplinas.length > 0 ? String(disciplinas[0].id) : null);
     setVideoUrl("");
     setPdfFile(null);
+    setRemoverPdf(false);
     setErroAulaForm("");
     setModalAulaAberto(true);
   }
@@ -137,6 +140,7 @@ export function AulasAdminPage() {
     setDisciplinaId(String(item.disciplinaId));
     setVideoUrl(item.videoUrl || "");
     setPdfFile(null);
+    setRemoverPdf(false);
     setErroAulaForm("");
     setModalAulaAberto(true);
   }
@@ -161,8 +165,9 @@ export function AulasAdminPage() {
     const formData = new FormData();
     formData.append("titulo", validacao.data.titulo);
     formData.append("disciplinaId", String(validacao.data.disciplinaId));
-    if (validacao.data.videoUrl) {
-      formData.append("videoUrl", validacao.data.videoUrl);
+    formData.append("videoUrl", validacao.data.videoUrl ?? "");
+    if (removerPdf && !pdfFile) {
+      formData.append("removerPdf", "true");
     }
     if (pdfFile) {
       formData.append("pdf", pdfFile);
@@ -576,24 +581,49 @@ export function AulasAdminPage() {
 
           <TextInput
             label="URL do Vídeo (opcional)"
-            placeholder="https://youtu.be/..."
+            placeholder="https://youtu.be/dQw4w9WgXcQ?si=T2oPAHlfszstUG_B"
             value={videoUrl}
             onChange={(e) => setVideoUrl(e.currentTarget.value)}
+            rightSection={
+              videoUrl ? (
+                <ActionIcon
+                  variant="subtle"
+                  color="gray"
+                  onClick={() => setVideoUrl("")}
+                  title="Limpar link do vídeo"
+                >
+                  <IconX size={14} />
+                </ActionIcon>
+              ) : null
+            }
           />
 
           <FileInput
             label="Material em PDF (opcional)"
             placeholder={
-              aulaEditando?.pdfNome
+              aulaEditando?.pdfNome && !removerPdf
                 ? `Atual: ${aulaEditando.pdfNome} (clique para substituir)`
                 : "Selecione um arquivo .pdf"
             }
             accept="application/pdf"
             leftSection={<IconUpload size={16} />}
             value={pdfFile}
-            onChange={setPdfFile}
+            disabled={removerPdf}
+            onChange={(file) => {
+              setPdfFile(file);
+              if (file) setRemoverPdf(false);
+            }}
             clearable
           />
+
+          {aulaEditando?.pdfNome && !pdfFile && (
+            <Checkbox
+              label={`Remover PDF atual (${aulaEditando.pdfNome})`}
+              color="red"
+              checked={removerPdf}
+              onChange={(e) => setRemoverPdf(e.currentTarget.checked)}
+            />
+          )}
 
           <Group justify="flex-end">
             <Button variant="default" onClick={() => setModalAulaAberto(false)}>

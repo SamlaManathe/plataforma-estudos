@@ -3,6 +3,7 @@ import type { AulaDTO } from "@plataforma-estudos/shared/aula";
 
 export async function getAll() {
   return await prisma.aula.findMany({
+    omit: { pdfArquivo: true },
     include: { disciplina: true },
     orderBy: { id: "asc" },
   });
@@ -11,6 +12,7 @@ export async function getAll() {
 export async function getOne(id: number) {
   return await prisma.aula.findUnique({
     where: { id },
+    omit: { pdfArquivo: true },
     include: {
       disciplina: true,
       questoes: {
@@ -42,7 +44,7 @@ export async function getByTituloAndDisciplina(
 type ArquivoPDF = {
   nome: string;
   arquivo: Buffer;
-} // transferir para outro lugar (no zod, talvez)
+}; // transferir para outro lugar (no zod, talvez)
 
 function converterPdf(arquivo: Buffer): Uint8Array<ArrayBuffer> {
   const bytes = new Uint8Array(new ArrayBuffer(arquivo.byteLength));
@@ -87,10 +89,17 @@ export async function update(
       ...(data.videoUrl !== undefined && {
         videoUrl: data.videoUrl,
       }),
-      ...(pdf && {
-        pdfNome: pdf.nome,
-        pdfArquivo: converterPdf(pdf.arquivo),
-      }),
+      ...(pdf
+        ? {
+            pdfNome: pdf.nome,
+            pdfArquivo: converterPdf(pdf.arquivo),
+          }
+        : data.removerPdf
+          ? {
+              pdfNome: null,
+              pdfArquivo: null,
+            }
+          : {}),
     },
     omit: { pdfArquivo: true },
     include: { questoes: true },

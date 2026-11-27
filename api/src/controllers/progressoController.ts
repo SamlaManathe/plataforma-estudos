@@ -3,6 +3,7 @@ import type {
   EnviarRespostasAulaDTO,
   MarcarAulaAssistidaDTO,
 } from "@plataforma-estudos/shared/progresso";
+import { parseId } from "../middleware/validarSchema.js";
 import * as service from "../services/progressoService.js";
 
 export async function responderAula(req: Request, res: Response) {
@@ -18,14 +19,14 @@ export async function assistirAula(req: Request, res: Response) {
 }
 
 export async function dashboardAluno(req: Request, res: Response) {
-  const alunoId: number = Number(req.params.alunoId);
+  const alunoId: number = parseId(req.params.alunoId);
   const resultado = await service.getDashboardAluno(alunoId);
   return res.json(resultado);
 }
 
 export async function respostasAlunoNaAula(req: Request, res: Response) {
-  const alunoId: number = Number(req.params.alunoId);
-  const aulaId: number = Number(req.params.aulaId);
+  const alunoId: number = parseId(req.params.alunoId);
+  const aulaId: number = parseId(req.params.aulaId);
   const resultado = await service.getRespostasAlunoNaAula(alunoId, aulaId);
   return res.json(resultado);
 }

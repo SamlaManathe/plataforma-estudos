@@ -30,11 +30,15 @@ const registry = new OpenAPIRegistry();
 
 // Schemas de resposta e erro padrão
 const idParamSchema = z.object({
-  id: z.coerce.number().openapi({ example: 1, description: "ID numérico do registro" }),
+  id: z.coerce
+    .number()
+    .openapi({ example: 1, description: "ID numérico do registro" }),
 });
 
 const alunoIdParamSchema = z.object({
-  alunoId: z.coerce.number().openapi({ example: 1, description: "ID numérico do aluno" }),
+  alunoId: z.coerce
+    .number()
+    .openapi({ example: 1, description: "ID numérico do aluno" }),
 });
 
 const erroValidacaoSchema = z.object({
@@ -44,12 +48,14 @@ const erroValidacaoSchema = z.object({
     z.object({
       campo: z.string().openapi({ example: "nome" }),
       mensagem: z.string().openapi({ example: "O nome é obrigatório" }),
-    })
+    }),
   ),
 });
 
 const erroSimplesSchema = z.object({
-  mensagem: z.string().openapi({ example: "Registro não encontrado ou dado duplicado" }),
+  mensagem: z
+    .string()
+    .openapi({ example: "Registro não encontrado ou dado duplicado" }),
 });
 
 // Helper para registrar CRUD padrão das entidades
@@ -58,7 +64,7 @@ function registrarCrud(
   rotaBase: string,
   createSchema: z.ZodTypeAny,
   updateSchema: z.ZodTypeAny,
-  responseSchema: z.ZodTypeAny
+  responseSchema: z.ZodTypeAny,
 ) {
   registry.registerPath({
     method: "get",
@@ -166,7 +172,10 @@ registry.registerPath({
       description: "Login realizado com sucesso (retorna dados sem senha)",
       content: {
         "application/json": {
-          schema: adminSchema.extend({ id: z.number(), tipo: z.enum(["ADMIN", "ALUNO"]) }),
+          schema: adminSchema.extend({
+            id: z.number(),
+            tipo: z.enum(["ADMIN", "ALUNO"]),
+          }),
         },
       },
     },
@@ -191,18 +200,60 @@ const adminResponseSchema = adminSchema.extend({
   aprovado: z.boolean(),
 });
 
-registrarCrud("Admins", "/admins", cadastroAdminSchema, atualizarAdminSchema, adminResponseSchema);
+registrarCrud(
+  "Admins",
+  "/admins",
+  cadastroAdminSchema,
+  atualizarAdminSchema,
+  adminResponseSchema,
+);
+
+registry.registerPath({
+  method: "post",
+  path: "/admins/direto",
+  tags: ["Admins"],
+  summary: "Criar administrador já aprovado",
+  request: {
+    body: { content: { "application/json": { schema: cadastroAdminSchema } } },
+  },
+  responses: {
+    201: {
+      description: "Administrador criado e aprovado",
+      content: { "application/json": { schema: adminResponseSchema } },
+    },
+    400: {
+      description: "Erro de validação ou dado duplicado",
+      content: { "application/json": { schema: erroValidacaoSchema } },
+    },
+  },
+});
 
 registry.registerPath({
   method: "patch",
   path: "/admins/{id}/aprovar",
   tags: ["Admins"],
-  summary: "Aprovar cadastro de administrador pendente",
-  request: { params: idParamSchema },
+  summary: "Ativar ou desativar cadastro de administrador",
+  request: {
+    params: idParamSchema,
+    body: {
+      content: {
+        "application/json": {
+          schema: z.object({
+            aprovado: z.boolean().openapi({ example: true }),
+            adminLogadoId: z.number().optional().openapi({ example: 1 }),
+          }),
+        },
+      },
+    },
+  },
   responses: {
     200: {
-      description: "Administrador aprovado com sucesso",
+      description: "Status do administrador atualizado com sucesso",
       content: { "application/json": { schema: adminResponseSchema } },
+    },
+    400: {
+      description: "ID inválido ou tentativa de desativar a própria conta",
+      content: { "application/json": { schema: erroSimplesSchema } },
     },
     404: {
       description: "Administrador não encontrado",
@@ -216,7 +267,7 @@ registrarCrud(
   "/alunos",
   cadastroAlunoSchema,
   atualizarAlunoSchema,
-  alunoSchema.extend({ id: z.number() })
+  alunoSchema.extend({ id: z.number() }),
 );
 
 registrarCrud(
@@ -224,7 +275,7 @@ registrarCrud(
   "/disciplinas",
   disciplinaSchema,
   disciplinaSchema,
-  disciplinaSchema.extend({ id: z.number() })
+  disciplinaSchema.extend({ id: z.number() }),
 );
 
 registrarCrud(
@@ -232,7 +283,10 @@ registrarCrud(
   "/aulas",
   aulaSchema,
   aulaSchema,
-  aulaSchema.extend({ id: z.number(), pdfNome: z.string().nullable().optional() })
+  aulaSchema.extend({
+    id: z.number(),
+    pdfNome: z.string().nullable().optional(),
+  }),
 );
 
 registry.registerPath({
@@ -243,7 +297,10 @@ registry.registerPath({
   request: { params: idParamSchema },
   responses: {
     200: { description: "Arquivo PDF da aula" },
-    404: { description: "Aula ou PDF não encontrado", content: { "application/json": { schema: erroSimplesSchema } } },
+    404: {
+      description: "Aula ou PDF não encontrado",
+      content: { "application/json": { schema: erroSimplesSchema } },
+    },
   },
 });
 
@@ -252,7 +309,7 @@ registrarCrud(
   "/questoes",
   questaoSchema,
   questaoSchema,
-  questaoSchema.extend({ id: z.number() })
+  questaoSchema.extend({ id: z.number() }),
 );
 
 registrarCrud(
@@ -260,21 +317,50 @@ registrarCrud(
   "/alternativas",
   alternativaSchema,
   alternativaSchema,
-  alternativaSchema.extend({ id: z.number() })
+  alternativaSchema.extend({ id: z.number() }),
 );
 
 // 3. Rotas de Progresso e Relatório
+registry.registerPath({
+  method: "get",
+  path: "/progresso/aluno/{alunoId}/aula/{aulaId}",
+  tags: ["Progresso"],
+  summary: "Buscar respostas já enviadas pelo aluno em uma aula específica",
+  request: {
+    params: z.object({
+      alunoId: z.coerce.number().openapi({ example: 1 }),
+      aulaId: z.coerce.number().openapi({ example: 1 }),
+    }),
+  },
+  responses: {
+    200: { description: "Lista de respostas do aluno na aula" },
+    400: {
+      description: "ID inválido",
+      content: { "application/json": { schema: erroSimplesSchema } },
+    },
+    404: {
+      description: "Aluno não encontrado",
+      content: { "application/json": { schema: erroSimplesSchema } },
+    },
+  },
+});
+
 registry.registerPath({
   method: "post",
   path: "/progresso/responder-aula",
   tags: ["Progresso"],
   summary: "Enviar respostas das questões de uma aula (trava definitiva)",
   request: {
-    body: { content: { "application/json": { schema: enviarRespostasAulaSchema } } },
+    body: {
+      content: { "application/json": { schema: enviarRespostasAulaSchema } },
+    },
   },
   responses: {
     201: { description: "Respostas salvas com sucesso" },
-    400: { description: "Erro de validação ou questionário já respondido", content: { "application/json": { schema: erroSimplesSchema } } },
+    400: {
+      description: "Erro de validação ou questionário já respondido",
+      content: { "application/json": { schema: erroSimplesSchema } },
+    },
   },
 });
 
@@ -284,11 +370,16 @@ registry.registerPath({
   tags: ["Progresso"],
   summary: "Marcar aula como assistida pelo aluno",
   request: {
-    body: { content: { "application/json": { schema: marcarAulaAssistidaSchema } } },
+    body: {
+      content: { "application/json": { schema: marcarAulaAssistidaSchema } },
+    },
   },
   responses: {
     201: { description: "Aula marcada como assistida" },
-    400: { description: "Erro de validação ou questionário pendente", content: { "application/json": { schema: erroSimplesSchema } } },
+    400: {
+      description: "Erro de validação ou questionário pendente",
+      content: { "application/json": { schema: erroSimplesSchema } },
+    },
   },
 });
 
@@ -300,7 +391,10 @@ registry.registerPath({
   request: { params: alunoIdParamSchema },
   responses: {
     200: { description: "Dashboard de progresso do aluno" },
-    404: { description: "Aluno não encontrado", content: { "application/json": { schema: erroSimplesSchema } } },
+    404: {
+      description: "Aluno não encontrado",
+      content: { "application/json": { schema: erroSimplesSchema } },
+    },
   },
 });
 

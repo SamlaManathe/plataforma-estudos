@@ -4,9 +4,14 @@ import { getByEmailAndPassword as getByEmailAndPasswordAdmin } from "../reposito
 import type { LoginDTO } from "@plataforma-estudos/shared/login";
 
 export async function login({ email, senha }: LoginDTO) {
-  const admin = await getByEmailAndPasswordAdmin(email, senha);
+  const admin = await getByEmailAndPasswordAdmin(email);
   
   if (admin && (await bcrypt.compare(senha, admin.senha))) {
+    if (!admin.aprovado) {
+      throw new Error(
+        "Seu cadastro de administrador ainda está pendente de aprovação por um administrador.",
+      );
+    }
     const { senha, ...adminSemSenha } = admin;
     return { ...adminSemSenha, tipo: "admin" as const };
   }

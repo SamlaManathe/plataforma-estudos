@@ -96,6 +96,7 @@ export const AdminScalarFieldEnum = {
   telefone: 'telefone',
   email: 'email',
   senha: 'senha',
+  aprovado: 'aprovado',
   criadoEm: 'criadoEm',
   atualizadoEm: 'atualizadoEm'
 } as const

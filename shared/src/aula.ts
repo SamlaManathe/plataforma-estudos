@@ -8,16 +8,20 @@ export const aulaSchema = z.object({
     .meta({ example: "Sistema cardiovascular" }),
 
   videoUrl: z
-    .url({ error: "Informe uma URL válida para o vídeo" })
-    .nullable()
-    .optional()
-    .meta({ example: "https://youtu.be/dQw4w9WgXcQ?si=x5bcN8GauWQoQph0" }),
+    .preprocess(
+      (val) => (typeof val === "string" && val.trim() === "" ? null : val),
+      z
+        .url({ error: "Informe uma URL válida para o vídeo" })
+        .nullable()
+        .optional(),
+    )
+    .meta({ example: "https://youtu.be/dQw4w9WgXcQ" }),
 
-  disciplinaId: z
+  disciplinaId: z.coerce
     .number({ error: "O ID da disciplina é obrigatório" })
     .int("O ID da disciplina deve ser um número inteiro")
-    .positive("O ID do disciplina deve ser maior que zero")
+    .positive("O ID da disciplina deve ser maior que zero")
     .meta({ example: 1 }),
-});
+})
 
 export type AulaDTO = z.infer<typeof aulaSchema>;

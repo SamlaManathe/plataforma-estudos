@@ -428,10 +428,6 @@ export type EnumLetraAlternativaFieldUpdateOperationsInput = {
   set?: $Enums.LetraAlternativa
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type AlternativaCreateNestedOneWithoutRespostasInput = {
   create?: Prisma.XOR<Prisma.AlternativaCreateWithoutRespostasInput, Prisma.AlternativaUncheckedCreateWithoutRespostasInput>
   connectOrCreate?: Prisma.AlternativaCreateOrConnectWithoutRespostasInput

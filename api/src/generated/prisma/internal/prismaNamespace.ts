@@ -1074,6 +1074,7 @@ export const AdminScalarFieldEnum = {
   telefone: 'telefone',
   email: 'email',
   senha: 'senha',
+  aprovado: 'aprovado',
   criadoEm: 'criadoEm',
   atualizadoEm: 'atualizadoEm'
 } as const
@@ -1220,6 +1221,13 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
  * Reference to a field of type 'Bytes'
  */
 export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes'>
@@ -1244,13 +1252,6 @@ export type EnumLetraAlternativaFieldRefInput<$PrismaModel> = FieldRefInputType<
  * Reference to a field of type 'LetraAlternativa[]'
  */
 export type ListEnumLetraAlternativaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LetraAlternativa[]'>
-    
-
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 

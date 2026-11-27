@@ -2,31 +2,33 @@ import { useState } from "react";
 import { AppShell, Button, Container, Group, Tabs, Title } from "@mantine/core";
 import {
   IconBook,
+  IconShieldCheck,
   IconUsers,
   IconVideo,
 } from "@tabler/icons-react";
 import { TelaDeEntrada } from "./components/TelaDeEntrada.tsx";
+import { BotaoTema } from "./components/BotaoTema.tsx";
 import { LoginAlunoPage } from "./pages/aluno/LoginAlunoPage.tsx";
 import { CadastroAlunoPage } from "./pages/aluno/CadastroAlunoPage.tsx";
 import { DisciplinasAlunoPage } from "./pages/aluno/DisciplinasAlunoPage.tsx";
 import { AulasAlunoPage } from "./pages/aluno/AulasAlunoPage.tsx";
 import { LoginAdminPage } from "./pages/admin/LoginAdminPage.tsx";
+import { CadastroAdminPage } from "./pages/admin/CadastroAdminPage.tsx";
 import { PainelAlunosAdminPage } from "./pages/admin/PainelAlunosAdminPage.tsx";
+import { PainelAdminsAdminPage } from "./pages/admin/PainelAdminsAdminPage.tsx";
 import { DisciplinasAdminPage } from "./pages/admin/DisciplinasAdminPage.tsx";
 import { AulasAdminPage } from "./pages/admin/AulasAdminPage.tsx";
 import type { UsuarioLogado } from "./services/api.ts";
 
 function App() {
-  // Quem está logado (null = ninguém)
   const [usuario, setUsuario] = useState<UsuarioLogado | null>(null);
-  // Qual tela de entrada aparece
-  const [tela, setTela] = useState("login-aluno");
-  // Aula aberta no fluxo do aluno
+  const [tela, setTela] = useState<
+    "login-aluno" | "cadastro-aluno" | "login-admin" | "cadastro-admin"
+  >("login-aluno");
   const [aulaAberta, setAulaAberta] = useState<{
     aulaId: number;
     disciplinaNome: string;
   } | null>(null);
-  // Aba ativa no painel do Admin
   const [abaAdmin, setAbaAdmin] = useState<string | null>("alunos");
 
   function handleSair() {
@@ -46,9 +48,13 @@ function App() {
                   Olá, {usuario.nome}
                 </Title>
               </Group>
-              <Button variant="light" color="gray" onClick={handleSair}>
-                Sair
-              </Button>
+
+              <Group gap="sm">
+                <BotaoTema />
+                <Button variant="light" color="gray" onClick={handleSair}>
+                  Sair
+                </Button>
+              </Group>
             </Group>
           </Container>
         </AppShell.Header>
@@ -95,12 +101,21 @@ function App() {
                   >
                     Aulas & Questões
                   </Tabs.Tab>
+                  <Tabs.Tab
+                    value="admins"
+                    leftSection={<IconShieldCheck size={16} />}
+                  >
+                    Administradores
+                  </Tabs.Tab>
                 </Tabs.List>
               </Tabs>
 
               {abaAdmin === "alunos" && <PainelAlunosAdminPage />}
               {abaAdmin === "disciplinas" && <DisciplinasAdminPage />}
               {abaAdmin === "aulas" && <AulasAdminPage />}
+              {abaAdmin === "admins" && (
+                <PainelAdminsAdminPage adminLogadoId={usuario.id} />
+              )}
             </Container>
           )}
         </AppShell.Main>
@@ -116,8 +131,13 @@ function App() {
             setAulaAberta(null);
             setUsuario(u);
           }}
-          onIrParaCadastro={() => setTela("cadastro")}
+          onIrParaCadastro={() => setTela("cadastro-aluno")}
           onIrParaLoginAdmin={() => setTela("login-admin")}
+        />
+      )}
+      {tela === "cadastro-aluno" && (
+        <CadastroAlunoPage
+          onVoltarParaLogin={() => setTela("login-aluno")}
         />
       )}
       {tela === "login-admin" && (
@@ -126,12 +146,14 @@ function App() {
             setAulaAberta(null);
             setUsuario(u);
           }}
-          onIrParaCadastro={() => setTela("cadastro")}
+          onIrParaCadastro={() => setTela("cadastro-admin")}
           onIrParaLoginAluno={() => setTela("login-aluno")}
         />
       )}
-      {tela === "cadastro" && (
-        <CadastroAlunoPage onVoltarParaLogin={() => setTela("login-aluno")} />
+      {tela === "cadastro-admin" && (
+        <CadastroAdminPage
+          onVoltarParaLogin={() => setTela("login-admin")}
+        />
       )}
     </TelaDeEntrada>
   );

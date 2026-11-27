@@ -124,9 +124,7 @@ export function AulasAdminPage() {
   function abrirCriarAula() {
     setAulaEditando(null);
     setTitulo("");
-    setDisciplinaId(
-      disciplinas.length > 0 ? String(disciplinas[0].id) : null,
-    );
+    setDisciplinaId(disciplinas.length > 0 ? String(disciplinas[0].id) : null);
     setVideoUrl("");
     setPdfFile(null);
     setErroAulaForm("");
@@ -344,8 +342,7 @@ export function AulasAdminPage() {
 
     if (!validacao.success) {
       setErroQuestaoForm(
-        validacao.error.issues[0]?.message ||
-          "Dados da alternativa inválidos.",
+        validacao.error.issues[0]?.message || "Dados da alternativa inválidos.",
       );
       return;
     }
@@ -599,10 +596,7 @@ export function AulasAdminPage() {
           />
 
           <Group justify="flex-end">
-            <Button
-              variant="default"
-              onClick={() => setModalAulaAberto(false)}
-            >
+            <Button variant="default" onClick={() => setModalAulaAberto(false)}>
               Cancelar
             </Button>
             <Button
@@ -646,7 +640,7 @@ export function AulasAdminPage() {
             )}
 
             {/* Formulário de Nova / Editar Questão */}
-            <Paper withBorder p="md" radius="md" bg="gray.0">
+            <Paper withBorder p="md" radius="md">
               <Stack gap="sm">
                 <Title order={5}>
                   {questaoEditando
@@ -749,9 +743,6 @@ export function AulasAdminPage() {
                               p="xs"
                               style={{
                                 borderRadius: 6,
-                                backgroundColor: alt.correta
-                                  ? "var(--mantine-color-teal-0)"
-                                  : "var(--mantine-color-gray-0)",
                               }}
                             >
                               <Group gap="xs">

@@ -23,6 +23,13 @@ export async function dashboardAluno(req: Request, res: Response) {
   return res.json(resultado);
 }
 
+export async function respostasAlunoNaAula(req: Request, res: Response) {
+  const alunoId: number = Number(req.params.alunoId);
+  const aulaId: number = Number(req.params.aulaId);
+  const resultado = await service.getRespostasAlunoNaAula(alunoId, aulaId);
+  return res.json(resultado);
+}
+
 export async function relatorioAdmin(req: Request, res: Response) {
   const relatorio = await service.getRelatorioAdmin();
   return res.json(relatorio);

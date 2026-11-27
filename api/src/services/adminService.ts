@@ -1,6 +1,9 @@
 import bcrypt from "bcryptjs";
 import type { Admin as AdminPrisma } from "../generated/prisma/client.js";
-import type { AtualizarAdminDTO, CadastroAdminDTO } from "@plataforma-estudos/shared/admin";
+import type {
+  AtualizarAdminDTO,
+  CadastroAdminDTO,
+} from "@plataforma-estudos/shared/admin";
 import * as repository from "../repositories/adminRepository.js";
 
 type Admin = Omit<AdminPrisma, "senha">;
@@ -14,7 +17,10 @@ export async function getOne(id: number): Promise<Admin | null> {
   return await repository.getOne(id);
 }
 
-export async function create(dados: CadastroAdminDTO, aprovado = false): Promise<Admin> {
+export async function create(
+  dados: CadastroAdminDTO,
+  aprovado = false,
+): Promise<Admin> {
   // Verificações de erro
   const emailExistente = await repository.getByEmail(dados.email);
   if (emailExistente) {
@@ -30,7 +36,10 @@ export async function create(dados: CadastroAdminDTO, aprovado = false): Promise
   return await repository.create({ ...dados, senha: senhaHash, aprovado });
 }
 
-export async function update(id: number, dados: AtualizarAdminDTO): Promise<Admin> {
+export async function update(
+  id: number,
+  dados: AtualizarAdminDTO,
+): Promise<Admin> {
   // Verificações de erro
   const adminExistente = await repository.getOne(id);
   if (!adminExistente) {
@@ -47,8 +56,12 @@ export async function update(id: number, dados: AtualizarAdminDTO): Promise<Admi
     throw new Error("Já existe um admin cadastrado com este telefone.");
   }
 
-  const dadosAtualizados: Partial<CadastroAdminDTO> = { nome: dados.nome, telefone: dados.telefone, email: dados.email };
-  
+  const dadosAtualizados: Partial<CadastroAdminDTO> = {
+    nome: dados.nome,
+    telefone: dados.telefone,
+    email: dados.email,
+  };
+
   if (dados.senha && dados.senha.trim() !== "") {
     dadosAtualizados.senha = await bcrypt.hash(dados.senha, SALT_ROUNDS);
   }
@@ -56,12 +69,21 @@ export async function update(id: number, dados: AtualizarAdminDTO): Promise<Admi
   return await repository.update(id, dadosAtualizados);
 }
 
-export async function aprovar(id: number): Promise<Admin> {
+export async function alterarStatusAprovacao(
+  id: number,
+  aprovado: boolean,
+  adminLogadoId?: number,
+): Promise<Admin> {
   const adminExistente = await repository.getOne(id);
   if (!adminExistente) {
     throw new Error("Admin não encontrado.");
   }
-  return await repository.aprovar(id);
+
+  if (!aprovado && adminLogadoId && id === adminLogadoId) {
+    throw new Error("Você não pode desativar a sua própria conta.");
+  }
+
+  return await repository.alterarStatusAprovacao(id, aprovado);
 }
 
 export async function remove(id: number): Promise<void> {

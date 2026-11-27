@@ -38,9 +38,17 @@ export async function update(req: Request, res: Response) {
   return res.json(admin);
 }
 
-export async function aprovar(req: Request, res: Response) {
+export async function alterarStatusAprovacao(req: Request, res: Response) {
   const id: number = Number(req.params.id);
-  const admin = await service.aprovar(id);
+  const aprovado: boolean = Boolean(req.body.aprovado);
+  const adminLogadoId: number | undefined = req.body.adminLogadoId
+    ? Number(req.body.adminLogadoId)
+    : undefined;
+  const admin = await service.alterarStatusAprovacao(
+    id,
+    aprovado,
+    adminLogadoId,
+  );
   return res.json(admin);
 }
 

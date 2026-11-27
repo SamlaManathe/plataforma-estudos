@@ -62,8 +62,8 @@ export function CadastroAdminPage({ onVoltarParaLogin }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Stack gap="md">
+    <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+      <Stack gap="md" w="100%">
         <div>
           <Title order={3}>Cadastro de Administrador</Title>
           <Text size="sm" c="dimmed">

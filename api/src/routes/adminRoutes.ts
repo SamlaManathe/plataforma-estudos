@@ -17,7 +17,7 @@ router.post(
   controller.createAprovado,
 );
 router.put("/admins/:id", validarBody(atualizarAdminSchema), controller.update);
-router.patch("/admins/:id/aprovar", controller.aprovar);
+router.patch("/admins/:id/aprovar", controller.alterarStatusAprovacao);
 router.delete("/admins/:id", controller.remove);
 
 export default router;

@@ -22,9 +22,7 @@ import type { UsuarioLogado } from "./services/api.ts";
 
 function App() {
   const [usuario, setUsuario] = useState<UsuarioLogado | null>(null);
-  const [tela, setTela] = useState<
-    "login-aluno" | "cadastro-aluno" | "login-admin" | "cadastro-admin"
-  >("login-aluno");
+  const [tela, setTela] = useState("login-aluno");
   const [aulaAberta, setAulaAberta] = useState<{
     aulaId: number;
     disciplinaNome: string;
@@ -48,7 +46,6 @@ function App() {
                   Olá, {usuario.nome}
                 </Title>
               </Group>
-
               <Group gap="sm">
                 <BotaoTema />
                 <Button variant="light" color="gray" onClick={handleSair}>
@@ -90,32 +87,29 @@ function App() {
                     Alunos & Desempenho
                   </Tabs.Tab>
                   <Tabs.Tab
-                    value="disciplinas"
-                    leftSection={<IconBook size={16} />}
-                  >
-                    Disciplinas
-                  </Tabs.Tab>
-                  <Tabs.Tab
-                    value="aulas"
-                    leftSection={<IconVideo size={16} />}
-                  >
-                    Aulas & Questões
-                  </Tabs.Tab>
-                  <Tabs.Tab
                     value="admins"
                     leftSection={<IconShieldCheck size={16} />}
                   >
                     Administradores
                   </Tabs.Tab>
+                  <Tabs.Tab
+                    value="disciplinas"
+                    leftSection={<IconBook size={16} />}
+                  >
+                    Disciplinas
+                  </Tabs.Tab>
+                  <Tabs.Tab value="aulas" leftSection={<IconVideo size={16} />}>
+                    Aulas & Questões
+                  </Tabs.Tab>
                 </Tabs.List>
               </Tabs>
 
               {abaAdmin === "alunos" && <PainelAlunosAdminPage />}
-              {abaAdmin === "disciplinas" && <DisciplinasAdminPage />}
-              {abaAdmin === "aulas" && <AulasAdminPage />}
               {abaAdmin === "admins" && (
                 <PainelAdminsAdminPage adminLogadoId={usuario.id} />
               )}
+              {abaAdmin === "disciplinas" && <DisciplinasAdminPage />}
+              {abaAdmin === "aulas" && <AulasAdminPage />}
             </Container>
           )}
         </AppShell.Main>
@@ -131,13 +125,8 @@ function App() {
             setAulaAberta(null);
             setUsuario(u);
           }}
-          onIrParaCadastro={() => setTela("cadastro-aluno")}
+          onIrParaCadastro={() => setTela("cadastro")}
           onIrParaLoginAdmin={() => setTela("login-admin")}
-        />
-      )}
-      {tela === "cadastro-aluno" && (
-        <CadastroAlunoPage
-          onVoltarParaLogin={() => setTela("login-aluno")}
         />
       )}
       {tela === "login-admin" && (
@@ -150,10 +139,11 @@ function App() {
           onIrParaLoginAluno={() => setTela("login-aluno")}
         />
       )}
+      {tela === "cadastro" && (
+        <CadastroAlunoPage onVoltarParaLogin={() => setTela("login-aluno")} />
+      )}
       {tela === "cadastro-admin" && (
-        <CadastroAdminPage
-          onVoltarParaLogin={() => setTela("login-admin")}
-        />
+        <CadastroAdminPage onVoltarParaLogin={() => setTela("login-admin")} />
       )}
     </TelaDeEntrada>
   );
